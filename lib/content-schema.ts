@@ -20,6 +20,18 @@ export const comparisonRowSchema = z.object({
   other: z.string().min(2),
 });
 
+export const quickFactSchema = z.object({
+  label: z.string().min(2),
+  value: z.string().min(1),
+});
+
+export const productReferenceSchema = z.object({
+  label: z.string().min(2),
+  context: z.enum(["practical", "comparison", "installation", "use-case"]),
+  body: z.string().min(20),
+  href: z.string().optional(),
+});
+
 export const reviewReplySchema = z.object({
   author: z.string().min(2),
   role: z.string().min(2),
@@ -63,6 +75,11 @@ export const frontmatterSchema = z.object({
   comparisonRows: z.array(comparisonRowSchema).default([]),
   astralReferenceMode: z.enum(["disallowed", "conditional"]).default("disallowed"),
   highlights: z.array(z.string()).default([]),
+  question: z.string().min(10).optional(),
+  answerSummary: z.string().min(40).max(220).optional(),
+  quickFacts: z.array(quickFactSchema).default([]),
+  relatedQuestions: z.array(z.string().min(8)).default([]),
+  subtleReferences: z.array(productReferenceSchema).default([]),
   ratingSummary: ratingSummarySchema.optional(),
   reviewThreads: z.array(reviewThreadSchema).default([]),
 });
@@ -71,6 +88,8 @@ export type Frontmatter = z.infer<typeof frontmatterSchema>;
 export type FAQItem = z.infer<typeof faqItemSchema>;
 export type SpecSummaryItem = z.infer<typeof specSummaryItemSchema>;
 export type ComparisonRow = z.infer<typeof comparisonRowSchema>;
+export type QuickFact = z.infer<typeof quickFactSchema>;
+export type ProductReference = z.infer<typeof productReferenceSchema>;
 export type ReviewReply = z.infer<typeof reviewReplySchema>;
 export type ReviewThread = z.infer<typeof reviewThreadSchema>;
 export type RatingSummary = z.infer<typeof ratingSummarySchema>;

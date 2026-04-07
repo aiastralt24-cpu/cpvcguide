@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { SiteFooter } from "@/components/site-footer";
-import { SiteHeader } from "@/components/site-header";
+import { SiteFooter } from "@/components/layout/site-footer";
+import { SiteHeader } from "@/components/layout/site-header";
 import { Analytics } from "@/components/analytics";
 import { buildAbsoluteUrl, defaultMetadata } from "@/lib/metadata";
 

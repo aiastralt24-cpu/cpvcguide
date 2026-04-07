@@ -1,93 +1,60 @@
-import Link from "next/link";
-import { HomeSection } from "@/components/home-section";
-import { QuickAnswer } from "@/components/quick-answer";
+import { FeaturedGuides } from "@/components/home/featured-guides";
+import { PopularQuestions } from "@/components/home/popular-questions";
+import { StartWithNeed } from "@/components/home/start-with-need";
+import { HeroShell } from "@/components/hero/hero-shell";
 import { ReviewSummary } from "@/components/review-summary";
-import { getFeaturedContent, getHubSummaries } from "@/lib/content";
-import { navItems, siteConfig } from "@/lib/site-config";
+import { TopicCardGrid } from "@/components/topic/topic-card-grid";
+import { SectionHeading } from "@/components/shared/section-heading";
+import { getFeaturedGuides, getHubSummaries, getPopularQuestions, getTaskBuckets } from "@/lib/content";
+import { siteConfig } from "@/lib/site-config";
 
 export default function HomePage() {
-  const featured = getFeaturedContent().slice(0, 8);
+  const featured = getFeaturedGuides(6).map((item) => ({
+    slug: item.slug,
+    category: item.category,
+    title: item.title,
+    href: `/${item.category}/${item.slug}`,
+    description: item.description,
+    shortAnswer: item.answerSummaryResolved,
+    quickFacts: item.quickFactsResolved,
+    relatedQuestions: item.relatedQuestionsResolved,
+    matchType: "summary" as const,
+    score: 1,
+    categoryLabel: item.categoryConfig.label,
+  }));
   const hubs = getHubSummaries();
+  const popularQuestions = getPopularQuestions(8);
+  const suggestedQueries = popularQuestions.slice(0, 6).map(({ question, href }) => ({ question, href }));
+  const taskBuckets = getTaskBuckets();
 
   return (
     <div className="mx-auto max-w-7xl px-6 pb-24 pt-10 md:px-10">
-      <section className="grid gap-8 rounded-[2rem] border border-[color:var(--border)] bg-[color:var(--card)]/90 p-8 shadow-[var(--shadow)] md:grid-cols-[1.35fr_0.8fr] md:p-12">
-        <div className="space-y-6">
-          <span className="inline-flex rounded-full border border-[color:var(--border)] bg-[color:var(--card-strong)] px-4 py-2 text-xs font-semibold uppercase tracking-[0.24em] text-[color:var(--muted)]">
-            CPVC technical knowledge platform
-          </span>
-          <div className="space-y-4">
-            <h1 className="max-w-3xl font-[family-name:var(--font-serif)] text-4xl leading-tight tracking-tight md:text-6xl">
-              Technical guidance for CPVC systems, built for search and real-world decisions.
-            </h1>
-            <p className="max-w-2xl text-lg leading-8 text-[color:var(--muted)]">
-              CPVC Guide is a focused answer engine for plumbing professionals, spec writers, and homeowners
-              comparing materials, solving failures, and validating system decisions.
-            </p>
-          </div>
-          <div className="flex flex-wrap gap-3">
-            {navItems.slice(0, 5).map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className="rounded-full border border-[color:var(--border)] px-5 py-3 text-sm font-medium transition hover:border-[color:var(--accent)] hover:text-[color:var(--accent)]"
-              >
-                {item.label}
-              </Link>
-            ))}
-          </div>
-        </div>
-        <QuickAnswer
-          title="What makes this different?"
-          summary="The site is intentionally narrow: one technical cluster, one answer-first format, and one publishing model that prevents duplicate, promotional, or thin CPVC content."
-          eyebrow="Launch brief"
+      <HeroShell suggestedQueries={suggestedQueries} mostAsked={popularQuestions} />
+
+      <StartWithNeed items={taskBuckets} />
+
+      <PopularQuestions items={popularQuestions} />
+
+      <section className="mt-16">
+        <SectionHeading
+          eyebrow="Topic hubs"
+          title="Browse the cluster when you know the area, not the exact question."
+          description="Hubs still matter for depth and internal linking, but they should support user tasks instead of replacing them."
         />
+        <div className="mt-8">
+          <TopicCardGrid hubs={hubs} />
+        </div>
       </section>
 
-      <HomeSection
-        title="Pillar hubs"
-        description="Each hub owns a clear technical cluster and links to every page in that lane."
-      >
-        <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-          {hubs.map((hub) => (
-            <Link
-              key={hub.slug}
-              href={`/${hub.slug}`}
-              className="rounded-[1.5rem] border border-[color:var(--border)] bg-[color:var(--card)] p-6 transition hover:-translate-y-1 hover:border-[color:var(--accent)]"
-            >
-              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[color:var(--accent)]">
-                {hub.categoryLabel}
-              </p>
-              <h2 className="mt-3 font-[family-name:var(--font-serif)] text-2xl">{hub.title}</h2>
-              <p className="mt-3 text-sm leading-7 text-[color:var(--muted)]">{hub.description}</p>
-            </Link>
-          ))}
-        </div>
-      </HomeSection>
+      <FeaturedGuides items={featured} />
 
-      <HomeSection
-        title="Featured pages"
-        description="A representative launch pack spanning fundamentals, installation, troubleshooting, comparisons, FAQs, and glossary pages."
-      >
-        <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
-          {featured.map((item) => (
-            <Link
-              key={item.slug}
-              href={`/${item.category}/${item.slug}`}
-              className="rounded-[1.5rem] border border-[color:var(--border)] bg-[color:var(--card)] p-5 transition hover:border-[color:var(--accent)]"
-            >
-              <p className="text-xs uppercase tracking-[0.22em] text-[color:var(--muted)]">{item.pageTypeLabel}</p>
-              <h3 className="mt-2 font-[family-name:var(--font-serif)] text-xl">{item.title}</h3>
-              <p className="mt-3 text-sm leading-7 text-[color:var(--muted)]">{item.description}</p>
-            </Link>
-          ))}
-        </div>
-      </HomeSection>
-
-      <HomeSection
-        title="Trusted by readers"
-        description="The content system is being built to scale, but trust still has to be visible on the page. The current launch pack is presented with a 4.8/5 average across the overall reading experience."
-      >
+      <section className="mt-16">
+        <SectionHeading
+          eyebrow="Trusted by readers"
+          title="Useful is not the same as polished. The site has to be both."
+          description="The launch pack carries an overall average of 4.8/5 because the articles are structured for action, not just presentation."
+        />
+        <div className="mt-8">
         <ReviewSummary
           summary={{
             average: siteConfig.feedback.averageRating,
@@ -96,13 +63,16 @@ export default function HomePage() {
             recommendationRate: siteConfig.feedback.recommendationRate,
           }}
         />
-      </HomeSection>
+        </div>
+      </section>
 
-      <HomeSection
-        title="Editorial operating model"
-        description="The implementation ships with the same content governance model described in the PRD."
-      >
-        <div className="grid gap-4 md:grid-cols-4">
+      <section className="mt-16">
+        <SectionHeading
+          eyebrow="Editorial operating model"
+          title="The scaled system is built around control, not volume."
+          description="Publishing, indexing, and trust are handled as separate decisions so the site can safely grow toward 50 articles."
+        />
+        <div className="mt-8 grid gap-4 md:grid-cols-4">
           {siteConfig.workflow.map((step, index) => (
             <div
               key={step}
@@ -113,7 +83,7 @@ export default function HomePage() {
             </div>
           ))}
         </div>
-      </HomeSection>
+      </section>
     </div>
   );
 }

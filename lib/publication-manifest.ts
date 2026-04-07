@@ -258,3 +258,34 @@ export const publicationManifest: PublicationEntry[] = [
 ];
 
 export const publicationManifestBySlug = new Map(publicationManifest.map((entry) => [entry.slug, entry]));
+
+export type PlannedArticleEntry = {
+  plannedSlug: string;
+  title: string;
+  category: string;
+  targetState: QualityState;
+  intent: string;
+};
+
+export const plannedArticleBacklog: PlannedArticleEntry[] = [
+  { plannedSlug: "what-is-cpvc-made-of", title: "What Is CPVC Made Of?", category: "cpvc-basics", targetState: "raw", intent: "definition" },
+  { plannedSlug: "why-is-cpvc-used-in-plumbing", title: "Why Is CPVC Used in Plumbing?", category: "cpvc-basics", targetState: "raw", intent: "definition" },
+  { plannedSlug: "is-cpvc-different-from-pvc", title: "Is CPVC Different From PVC?", category: "cpvc-basics", targetState: "raw", intent: "comparison" },
+  { plannedSlug: "can-cpvc-handle-geyser-lines", title: "Can CPVC Handle Geyser Lines?", category: "technical-guides", targetState: "raw", intent: "application" },
+  { plannedSlug: "cpvc-pressure-rating-explained", title: "CPVC Pressure Rating Explained", category: "technical-guides", targetState: "raw", intent: "definition" },
+  { plannedSlug: "can-cpvc-be-used-in-commercial-buildings", title: "Can CPVC Be Used in Commercial Buildings?", category: "technical-guides", targetState: "raw", intent: "application" },
+  { plannedSlug: "common-cpvc-installation-mistakes", title: "Common CPVC Installation Mistakes", category: "installation", targetState: "raw", intent: "application" },
+  { plannedSlug: "what-tools-are-needed-for-cpvc-installation", title: "What Tools Are Needed for CPVC Installation?", category: "installation", targetState: "raw", intent: "application" },
+  { plannedSlug: "how-long-does-cpvc-cement-take-to-cure", title: "How Long Does CPVC Cement Take to Cure?", category: "installation", targetState: "raw", intent: "application" },
+  { plannedSlug: "why-does-cpvc-become-brittle", title: "Why Does CPVC Become Brittle?", category: "problems", targetState: "raw", intent: "troubleshooting" },
+  { plannedSlug: "what-causes-cpvc-pipe-burst", title: "What Causes CPVC Pipe Burst?", category: "problems", targetState: "raw", intent: "troubleshooting" },
+  { plannedSlug: "how-do-you-repair-a-leaking-cpvc-joint", title: "How Do You Repair a Leaking CPVC Joint?", category: "problems", targetState: "raw", intent: "troubleshooting" },
+  { plannedSlug: "cpvc-vs-copper-lifecycle-cost", title: "CPVC vs Copper Lifecycle Cost", category: "comparisons", targetState: "raw", intent: "comparison" },
+  { plannedSlug: "which-pipe-is-best-for-hard-water-areas", title: "Which Pipe Is Best for Hard Water Areas?", category: "comparisons", targetState: "raw", intent: "comparison" },
+  { plannedSlug: "which-pipe-is-best-for-bathroom-plumbing", title: "Which Pipe Is Best for Bathroom Plumbing?", category: "comparisons", targetState: "raw", intent: "comparison" },
+  { plannedSlug: "is-cpvc-uv-resistant", title: "Is CPVC UV Resistant?", category: "quick-answers", targetState: "raw", intent: "application" },
+  { plannedSlug: "can-cpvc-release-chemicals-into-water", title: "Can CPVC Release Chemicals Into Water?", category: "quick-answers", targetState: "raw", intent: "definition" },
+  { plannedSlug: "what-is-bis-for-cpvc", title: "What Is BIS for CPVC?", category: "standards", targetState: "raw", intent: "definition" },
+  { plannedSlug: "what-markings-should-be-on-cpvc-pipes", title: "What Markings Should Be Present on CPVC Pipes?", category: "standards", targetState: "raw", intent: "definition" },
+  { plannedSlug: "pipe-support-spacing", title: "What Is Pipe Support Spacing?", category: "glossary", targetState: "raw", intent: "definition" }
+];

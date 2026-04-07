@@ -5,32 +5,54 @@ import readingTime from "reading-time";
 import {
   frontmatterSchema,
   type Frontmatter,
+  type ProductReference,
+  type QuickFact,
   type RatingSummary,
   type ReviewThread,
 } from "@/lib/content-schema";
-import { publicationManifest, publicationManifestBySlug, type PublicationEntry } from "@/lib/publication-manifest";
-import { intentTypeLabels, pageTypeLabels, getCategoryBySlug, categories } from "@/lib/site-config";
+import {
+  plannedArticleBacklog,
+  publicationManifest,
+  publicationManifestBySlug,
+  type PlannedArticleEntry,
+  type PublicationEntry,
+} from "@/lib/publication-manifest";
+import {
+  categories,
+  getCategoryBySlug,
+  intentTypeLabels,
+  pageTypeLabels,
+  type CategoryConfig,
+} from "@/lib/site-config";
 import { extractToc } from "@/lib/toc";
 
 const CONTENT_ROOT = path.join(process.cwd(), "content");
+const contentDirectories = ["articles", "comparisons", "faqs", "glossary", "hubs"] as const;
 
-const contentDirectories = [
-  "articles",
-  "comparisons",
-  "faqs",
-  "glossary",
-  "hubs",
-] as const;
+export type AnswerSnippet = {
+  question: string;
+  shortAnswer: string;
+  quickFacts: QuickFact[];
+  relatedQuestions: string[];
+  relatedArticles: string[];
+};
 
 export type ContentItem = Frontmatter & {
   body: string;
+  categoryConfig: CategoryConfig;
   pageTypeLabel: string;
   intentTypeLabel: string;
   readingTime: string;
   publishedAtLabel: string;
   updatedAtLabel: string;
-  publication: PublicationEntry;
   reviewedAtLabel: string;
+  publication: PublicationEntry;
+  questionResolved: string;
+  answerSummaryResolved: string;
+  quickFactsResolved: QuickFact[];
+  relatedQuestionsResolved: string[];
+  subtleReferencesResolved: ProductReference[];
+  answerSnippet: AnswerSnippet;
   reviewThreadsWithLabels: (ReviewThread & { dateLabel: string; replyDateLabel?: string })[];
   ratingSummaryResolved: RatingSummary;
   breadcrumbs: { label: string; href?: string }[];
@@ -242,44 +264,100 @@ function getDefaultReviewThreads(parsed: Frontmatter): ReviewThread[] {
   return parsed.reviewThreads.length > 0 ? parsed.reviewThreads : byType[parsed.pageType];
 }
 
+function getDerivedQuickFacts(parsed: Frontmatter): QuickFact[] {
+  if (parsed.quickFacts.length > 0) {
+    return parsed.quickFacts;
+  }
+
+  if (parsed.specSummary.length > 0) {
+    return parsed.specSummary.map((item) => ({
+      label: item.label,
+      value: item.value,
+    }));
+  }
+
+  return [];
+}
+
+function getDerivedRelatedQuestions(parsed: Frontmatter): string[] {
+  if (parsed.relatedQuestions.length > 0) {
+    return parsed.relatedQuestions;
+  }
+
+  if (parsed.faqItems.length > 0) {
+    return parsed.faqItems.map((item) => item.question);
+  }
+
+  return [];
+}
+
+function getDerivedSubtleReferences(parsed: Frontmatter): ProductReference[] {
+  if (parsed.subtleReferences.length > 0) {
+    return parsed.subtleReferences;
+  }
+
+  if (parsed.astralReferenceMode === "conditional") {
+    return [
+      {
+        label: "Manufacturer context",
+        context: parsed.pageType === "comparison" ? "comparison" : "practical",
+        body: "Where it helps the reader, this page may cite a manufacturer example such as Astral CPVC Pro to clarify a technical point. The goal is explanation, not endorsement.",
+        href: "/editorial-policy",
+      },
+    ];
+  }
+
+  return [];
+}
+
 function loadRawContent() {
   const files = contentDirectories.flatMap((directory) => readDirectoryFiles(path.join(CONTENT_ROOT, directory)));
   const items = files.map((file) => {
     const source = fs.readFileSync(file, "utf8");
     const { data, content } = matter(source);
     const parsed = frontmatterSchema.parse(data);
-    const category = getCategoryBySlug(parsed.category);
+    const categoryConfig = getCategoryBySlug(parsed.category);
 
-    if (!category) {
+    if (!categoryConfig) {
       throw new Error(`Unknown category "${parsed.category}" in ${file}`);
     }
 
-    if (parsed.pageType === "hub" && !category.hubDriven) {
+    if (parsed.pageType === "hub" && !categoryConfig.hubDriven) {
       throw new Error(`Hub page ${parsed.slug} targets category ${parsed.category}, which is not hub-driven.`);
     }
+
+    const publication = publicationManifestBySlug.get(parsed.slug);
+    if (!publication) {
+      throw new Error(`Missing publication manifest entry for ${parsed.slug}`);
+    }
+
+    const quickFactsResolved = getDerivedQuickFacts(parsed);
+    const relatedQuestionsResolved = getDerivedRelatedQuestions(parsed);
+    const subtleReferencesResolved = getDerivedSubtleReferences(parsed);
 
     return {
       ...parsed,
       body: content,
+      categoryConfig,
       pageTypeLabel: pageTypeLabels[parsed.pageType],
       intentTypeLabel: intentTypeLabels[parsed.intentType],
       readingTime: readingTime(content).text,
       publishedAtLabel: formatDate(parsed.publishedAt),
       updatedAtLabel: formatDate(parsed.updatedAt),
-      publication: (() => {
-        const manifest = publicationManifestBySlug.get(parsed.slug);
-        if (!manifest) {
-          throw new Error(`Missing publication manifest entry for ${parsed.slug}`);
-        }
-        return manifest;
-      })(),
-      reviewedAtLabel: formatDate((() => {
-        const manifest = publicationManifestBySlug.get(parsed.slug);
-        if (!manifest) {
-          throw new Error(`Missing publication manifest entry for ${parsed.slug}`);
-        }
-        return manifest.reviewedAt;
-      })()),
+      reviewedAtLabel: formatDate(publication.reviewedAt),
+      publication,
+      questionResolved: parsed.question ?? parsed.primaryQuery,
+      answerSummaryResolved: parsed.answerSummary ?? parsed.quickAnswer,
+      quickFactsResolved,
+      relatedQuestionsResolved,
+      subtleReferencesResolved,
+      answerSnippet: {
+        question: parsed.question ?? parsed.primaryQuery,
+        shortAnswer: parsed.answerSummary ?? parsed.quickAnswer,
+        quickFacts: quickFactsResolved,
+        relatedQuestions: relatedQuestionsResolved,
+        relatedArticles: parsed.relatedSlugs,
+      },
       reviewThreadsWithLabels: getDefaultReviewThreads(parsed).map((thread) => ({
         ...thread,
         dateLabel: formatDate(thread.date),
@@ -288,7 +366,7 @@ function loadRawContent() {
       ratingSummaryResolved: parsed.ratingSummary ?? getDefaultRatingSummary(parsed.pageType),
       breadcrumbs: [
         { label: "Home", href: "/" },
-        { label: category.label, href: `/${category.slug}` },
+        { label: categoryConfig.label, href: `/${categoryConfig.slug}` },
         { label: parsed.title },
       ],
       toc: extractToc(content),
@@ -314,18 +392,23 @@ export function getAllContentItems() {
   if (!cache) {
     cache = loadRawContent();
   }
-
   return cache;
 }
 
+export function getPublishedContentItems() {
+  return getAllContentItems().filter((item) => item.publication.published);
+}
+
+export function getIndexableContentItems() {
+  return getPublishedContentItems().filter((item) => item.publication.indexable);
+}
+
 export function getContentBySlug(category: string, slug: string) {
-  return getAllContentItems().find(
-    (item) => item.category === category && item.slug === slug && item.publication.published,
-  );
+  return getPublishedContentItems().find((item) => item.category === category && item.slug === slug);
 }
 
 export function getHubByCategorySlug(category: string) {
-  const hub = getAllContentItems().find((item) => item.pageType === "hub" && item.category === category);
+  const hub = getPublishedContentItems().find((item) => item.pageType === "hub" && item.category === category);
   if (!hub) {
     return undefined;
   }
@@ -335,30 +418,77 @@ export function getHubByCategorySlug(category: string) {
     title: hub.title,
     description: hub.description,
     highlights: hub.highlights,
-    categoryLabel: getCategoryBySlug(hub.category)?.label ?? hub.category,
+    categoryLabel: hub.categoryConfig.label,
   } satisfies HubSummary;
 }
 
 export function getHubSummaries() {
-  return getAllContentItems()
-    .filter((item) => item.pageType === "hub" && item.publication.published)
+  return getPublishedContentItems()
+    .filter((item) => item.pageType === "hub")
     .map((item) => ({
       slug: item.category,
       title: item.title,
       description: item.description,
       highlights: item.highlights,
-      categoryLabel: getCategoryBySlug(item.category)?.label ?? item.category,
+      categoryLabel: item.categoryConfig.label,
     }));
 }
 
 export function getFeaturedContent() {
-  return getAllContentItems().filter((item) => item.pageType !== "hub" && item.publication.published);
+  return getPublishedContentItems().filter((item) => item.pageType !== "hub");
+}
+
+export function getFeaturedGuides(limit = 6) {
+  return getPublishedContentItems()
+    .filter((item) => item.pageType === "article" || item.pageType === "comparison")
+    .slice(0, limit);
+}
+
+export function getPopularQuestions(limit = 8) {
+  return getPublishedContentItems()
+    .filter((item) => item.pageType !== "hub")
+    .map((item) => ({
+      question: item.questionResolved,
+      href: `/${item.category}/${item.slug}`,
+      categoryLabel: item.categoryConfig.label,
+    }))
+    .slice(0, limit);
+}
+
+export function getTaskBuckets() {
+  return [
+    {
+      title: "Understand CPVC basics",
+      description: "Start with simple definitions and early-stage material understanding.",
+      href: "/cpvc-basics",
+    },
+    {
+      title: "Compare CPVC with other pipes",
+      description: "Use table-first comparisons when the decision is between materials.",
+      href: "/comparisons",
+    },
+    {
+      title: "Install it correctly",
+      description: "See joining, spacing, tools, and common field mistakes.",
+      href: "/installation",
+    },
+    {
+      title: "Diagnose a failure",
+      description: "Move from symptom to likely cause and then to the next repair step.",
+      href: "/problems",
+    },
+    {
+      title: "Interpret standards and sizing",
+      description: "Understand what ratings, CTS, SDR, and standards language actually mean.",
+      href: "/standards",
+    },
+  ];
 }
 
 export function getCategoryArchive() {
   return categories.map((category) => {
-    const items = getAllContentItems()
-      .filter((item) => item.category === category.slug && item.pageType !== "hub" && item.publication.published)
+    const items = getPublishedContentItems()
+      .filter((item) => item.category === category.slug && item.pageType !== "hub")
       .sort((a, b) => a.title.localeCompare(b.title));
 
     return {
@@ -386,4 +516,8 @@ export function getPublicationStats() {
     nonIndexable: published.length - indexable.length,
     states,
   };
+}
+
+export function getPlannedArticleBacklog(): PlannedArticleEntry[] {
+  return plannedArticleBacklog;
 }

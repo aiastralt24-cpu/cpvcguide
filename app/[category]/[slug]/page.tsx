@@ -1,17 +1,16 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { ArticlePage } from "@/components/article-page";
-import { getAllContentItems, getContentBySlug } from "@/lib/content";
-import { buildContentMetadata } from "@/lib/metadata";
+import { ArticlePageShell } from "@/components/article/article-page-shell";
+import { getPublishedContentItems } from "@/lib/content";
+import { getArticleBySlug } from "@/features/articles/lib/get-article-by-slug";
+import { buildArticleMetadata } from "@/features/seo/lib/build-metadata";
 
 type ContentPageProps = {
   params: Promise<{ category: string; slug: string }>;
 };
 
 export async function generateStaticParams() {
-  return getAllContentItems()
-    .filter((item) => item.publication.published)
-    .map((item) => ({
+  return getPublishedContentItems().map((item) => ({
     category: item.category,
     slug: item.slug,
   }));
@@ -19,22 +18,22 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: ContentPageProps): Promise<Metadata> {
   const { category, slug } = await params;
-  const content = getContentBySlug(category, slug);
+  const content = getArticleBySlug(category, slug);
 
   if (!content) {
     return {};
   }
 
-  return buildContentMetadata(content);
+  return buildArticleMetadata(content);
 }
 
 export default async function ContentPage({ params }: ContentPageProps) {
   const { category, slug } = await params;
-  const content = getContentBySlug(category, slug);
+  const content = getArticleBySlug(category, slug);
 
   if (!content) {
     notFound();
   }
 
-  return <ArticlePage content={content} />;
+  return <ArticlePageShell article={content} />;
 }

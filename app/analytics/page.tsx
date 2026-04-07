@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { PageIntro } from "@/components/page-intro";
-import { getAllContentItems, getPublicationStats } from "@/lib/content";
+import { getPublicationDashboardData } from "@/features/publication/lib/publication";
 
 export const metadata: Metadata = {
   title: "Publication Dashboard",
@@ -14,8 +14,7 @@ export const metadata: Metadata = {
 const stateOrder = ["raw", "polished", "publishable", "indexable-ready"] as const;
 
 export default function AnalyticsPage() {
-  const items = getAllContentItems().sort((a, b) => a.title.localeCompare(b.title));
-  const stats = getPublicationStats();
+  const { items, planned, stats } = getPublicationDashboardData();
 
   return (
     <div className="mx-auto max-w-7xl px-6 py-16 md:px-10">
@@ -99,6 +98,29 @@ export default function AnalyticsPage() {
               ))}
             </tbody>
           </table>
+        </div>
+      </section>
+
+      <section className="mt-12 rounded-[2rem] border border-[color:var(--border)] bg-[color:var(--card)] p-6 md:p-8">
+        <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[color:var(--accent)]">50-article rollout</p>
+            <h2 className="mt-2 font-[family-name:var(--font-serif)] text-3xl">Planned backlog for the next 20 pages</h2>
+          </div>
+          <p className="max-w-lg text-sm leading-7 text-[color:var(--muted)]">
+            These are intentionally kept outside the live published set until they earn stronger quality and indexability decisions.
+          </p>
+        </div>
+        <div className="mt-8 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+          {planned.map((item) => (
+            <div key={item.plannedSlug} className="rounded-[1.5rem] border border-[color:var(--border)] bg-white/55 p-5">
+              <p className="text-xs uppercase tracking-[0.18em] text-[color:var(--accent)]">{item.category}</p>
+              <h3 className="mt-2 font-[family-name:var(--font-serif)] text-2xl">{item.title}</h3>
+              <p className="mt-3 text-sm leading-7 text-[color:var(--muted)]">
+                Target state: {item.targetState} • Intent: {item.intent}
+              </p>
+            </div>
+          ))}
         </div>
       </section>
     </div>
