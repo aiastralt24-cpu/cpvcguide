@@ -1,8 +1,11 @@
 # Pre-Publish Checklist
 
 - Primary query is unique in the topic register
+- Topic passed similarity and cannibalization review
 - Page has valid frontmatter and passes build validation
 - Quick Answer is present and clear
+- Opening section states what is true, when it is true, and when it is not true
+- Page includes practical mistakes, limits, or field conditions where relevant
 - FAQ block is present where required
 - Related reading points to live pages
 - Breadcrumb and canonical route match the public URL
@@ -10,3 +13,6 @@
 - Astral mention, if present, follows policy
 - Page is readable on mobile
 - Page fits the intended category and pillar
+- Editorial review is complete
+- Technical review is complete
+- Publish decision and indexability decision are recorded separately

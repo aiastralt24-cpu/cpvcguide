@@ -9,7 +9,7 @@ export function HeroMostAsked({ items }: { items: { question: string; href: stri
           href={item.href}
           eyebrow={item.categoryLabel}
           title={item.question}
-          description="Answer-first page with related guidance and the next practical question to ask."
+          description="Open the direct answer, scan the limits quickly, then use the related guides only if the decision needs more detail."
         />
       ))}
     </div>

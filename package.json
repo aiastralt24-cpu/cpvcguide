@@ -8,7 +8,19 @@
     "start": "next start",
     "lint": "ESLINT_USE_FLAT_CONFIG=false eslint .",
     "typecheck": "tsc --noEmit",
-    "validate-content": "node scripts/validate-content.mjs"
+    "validate-content": "node scripts/validate-content.mjs",
+    "content:init": "node scripts/content-pipeline.mjs init",
+    "content:autobrief": "node scripts/content-pipeline.mjs autobrief",
+    "content:autodraft": "node scripts/content-pipeline.mjs autodraft",
+    "content:autoedit": "node scripts/content-pipeline.mjs autoedit",
+    "content:final-review": "node scripts/content-pipeline.mjs final-review",
+    "content:run": "node scripts/content-pipeline.mjs run",
+    "content:similarity": "node scripts/content-pipeline.mjs similarity",
+    "content:advance": "node scripts/content-pipeline.mjs advance",
+    "content:score": "node scripts/content-pipeline.mjs score",
+    "content:gate": "node scripts/content-pipeline.mjs gate",
+    "content:status": "node scripts/content-pipeline.mjs status",
+    "content:manifest": "node scripts/content-pipeline.mjs apply-manifest"
   },
   "dependencies": {
     "gray-matter": "^4.0.3",

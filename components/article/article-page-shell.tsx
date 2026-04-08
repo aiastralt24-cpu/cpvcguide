@@ -22,17 +22,13 @@ export function ArticlePageShell({ article }: { article: Article }) {
         <article className="min-w-0">
           <div className="rounded-[2rem] border border-[color:var(--border)] bg-[color:var(--card)] p-8 shadow-[var(--shadow)] md:p-10">
             <ArticleHeader article={article} />
-            <div className="mt-8 grid gap-6 md:grid-cols-2">
+            <div className="mt-8">
               <ArticleAnswerBox article={article} />
-              <ArticleAuthorityNote article={article} />
             </div>
             <div className="mt-10">
               <ArticleQuickData article={article} />
             </div>
             <ComparisonTable rows={article.comparisonRows} />
-            <div className="mt-10">
-              <ReviewSummary summary={article.ratingSummaryResolved} />
-            </div>
             <div className="mt-10">
               <ArticleBody article={article} />
             </div>
@@ -46,21 +42,19 @@ export function ArticlePageShell({ article }: { article: Article }) {
                 </div>
               </div>
             </div>
+            <div className="mt-12">
+              <ArticleRelatedGuides article={article} />
+            </div>
+            <div className="mt-10">
+              <ReviewSummary summary={article.ratingSummaryResolved} />
+            </div>
             <ReviewComments threads={article.reviewThreadsWithLabels} />
           </div>
-          <ArticleRelatedGuides article={article} />
         </article>
 
         <div className="space-y-6">
           <ArticleToc article={article} />
-          <div className="rounded-[1.5rem] border border-[color:var(--border)] bg-[color:var(--card)] p-5">
-            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[color:var(--accent)]">Page controls</p>
-            <ul className="mt-4 space-y-3 text-sm leading-7 text-[color:var(--muted)]">
-              <li>Published: {article.publication.published ? "Yes" : "No"}</li>
-              <li>Indexable: {article.publication.indexable ? "Yes" : "No"}</li>
-              <li>Quality state: {article.publication.qualityState}</li>
-            </ul>
-          </div>
+          <ArticleAuthorityNote article={article} />
         </div>
       </div>
     </div>

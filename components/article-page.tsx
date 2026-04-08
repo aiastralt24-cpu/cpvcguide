@@ -11,6 +11,7 @@ import { ReviewComments } from "@/components/review-comments";
 import { ReviewSummary } from "@/components/review-summary";
 import { SpecSummary } from "@/components/spec-summary";
 import { TableOfContents } from "@/components/table-of-contents";
+import { ArticleAuthorityNote } from "@/components/article/article-authority-note";
 import { buildArticleJsonLd, buildBreadcrumbJsonLd, buildFaqJsonLd } from "@/lib/json-ld";
 import type { ContentItem } from "@/lib/content";
 import { slugifyHeading } from "@/lib/toc";
@@ -79,23 +80,11 @@ export function ArticlePage({ content }: { content: ContentItem }) {
               {content.title}
             </h1>
             <p className="mt-6 max-w-3xl text-lg leading-8 text-[color:var(--muted)]">{content.description}</p>
-            <div className="mt-8 grid gap-6 md:grid-cols-2">
+            <div className="mt-8">
               <QuickAnswer summary={content.quickAnswer} />
-              <div className="rounded-[1.75rem] border border-[color:var(--border)] bg-white/55 p-6">
-                <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[color:var(--accent)]">Publishing data</p>
-                <div className="mt-4 space-y-3 text-sm text-[color:var(--muted)]">
-                  <p>Primary query: {content.primaryQuery}</p>
-                  <p>Reviewed by: {content.author}</p>
-                  <p>Published: {content.publishedAtLabel}</p>
-                  <p>Updated: {content.updatedAtLabel}</p>
-                </div>
-              </div>
             </div>
             <SpecSummary items={content.specSummary} />
             <ComparisonTable rows={content.comparisonRows} />
-            <div className="mt-10">
-              <ReviewSummary summary={content.ratingSummaryResolved} />
-            </div>
             <div className="prose-content mt-10">
               <MDXRemote
                 source={content.body}
@@ -104,13 +93,19 @@ export function ArticlePage({ content }: { content: ContentItem }) {
               />
             </div>
             <FAQList items={content.faqItems} />
+            <div className="mt-12">
+              <RelatedReading items={content.relatedItems} />
+            </div>
+            <div className="mt-10">
+              <ReviewSummary summary={content.ratingSummaryResolved} />
+            </div>
             <ReviewComments threads={content.reviewThreadsWithLabels} />
           </div>
-          <RelatedReading items={content.relatedItems} />
         </article>
 
         <div className="space-y-6">
           <TableOfContents items={content.toc} />
+          <ArticleAuthorityNote article={content} />
           <div className="rounded-[1.5rem] border border-[color:var(--border)] bg-[color:var(--card)] p-5">
             <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[color:var(--accent)]">Cluster rules</p>
             <ul className="mt-4 space-y-3 text-sm leading-7 text-[color:var(--muted)]">

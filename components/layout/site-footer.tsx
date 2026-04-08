@@ -21,15 +21,14 @@ export function SiteFooter() {
             ))}
           </div>
         </div>
-        <div>
-          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[color:var(--muted)]">Trust and policy</p>
-          <div className="mt-4 grid gap-3 text-sm">
-            <Link href="/about">About</Link>
-            <Link href="/editorial-policy">Editorial policy</Link>
-            <Link href="/analytics">Internal dashboard</Link>
-          </div>
-        </div>
-      </div>
-    </footer>
-  );
+	        <div>
+	          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[color:var(--muted)]">Trust and policy</p>
+	          <div className="mt-4 grid gap-3 text-sm">
+	            <Link href="/about">About</Link>
+	            <Link href="/editorial-policy">Editorial policy</Link>
+	          </div>
+	        </div>
+	      </div>
+	    </footer>
+	  );
 }

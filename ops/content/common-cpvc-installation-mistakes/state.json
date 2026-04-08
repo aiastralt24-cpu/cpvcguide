@@ -1,0 +1,66 @@
+{
+  "topic": "Common CPVC Installation Mistakes",
+  "slug": "common-cpvc-installation-mistakes",
+  "primaryQuery": "Common CPVC Installation Mistakes",
+  "pageType": "article",
+  "category": "installation",
+  "pillar": "Installation and Joining",
+  "intentType": "application",
+  "audience": "To be defined in research brief",
+  "createdAt": "2026-04-08",
+  "updatedAt": "2026-04-08",
+  "currentStage": "technicalReview",
+  "similarityDecision": "proceed",
+  "publication": {
+    "qualityState": "polished",
+    "published": false,
+    "indexable": false,
+    "reviewer": "",
+    "reviewedAt": "",
+    "notes": ""
+  },
+  "stages": {
+    "topicIntake": {
+      "status": "approved",
+      "owner": "Content Ops",
+      "completedAt": "2026-04-08"
+    },
+    "researchBrief": {
+      "status": "complete",
+      "owner": "Research Agent",
+      "completedAt": "2026-04-08",
+      "notes": "Auto-generated first-pass research brief. Human review still recommended before publishing."
+    },
+    "draft": {
+      "status": "complete",
+      "owner": "Writer Agent",
+      "completedAt": "2026-04-08",
+      "notes": "Auto-generated first-pass draft. Requires editorial and technical review."
+    },
+    "editorialReview": {
+      "status": "complete",
+      "owner": "Editor Agent",
+      "completedAt": "2026-04-08",
+      "notes": "Auto-generated editorial review. Recommendation: publishable."
+    },
+    "technicalReview": {
+      "status": "pending",
+      "owner": "",
+      "completedAt": "",
+      "notes": ""
+    },
+    "publishDecision": {
+      "status": "pending",
+      "owner": "",
+      "completedAt": "",
+      "notes": ""
+    },
+    "indexabilityDecision": {
+      "status": "pending",
+      "owner": "",
+      "completedAt": "",
+      "notes": ""
+    }
+  },
+  "scorecard": null
+}

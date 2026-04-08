@@ -19,7 +19,7 @@ export function middleware(request: NextRequest) {
   const expectedPassword = process.env.INTERNAL_DASHBOARD_PASSWORD;
 
   if (!expectedUser || !expectedPassword) {
-    return NextResponse.next();
+    return unauthorizedResponse();
   }
 
   const authHeader = request.headers.get("authorization");

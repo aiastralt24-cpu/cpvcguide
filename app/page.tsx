@@ -14,7 +14,7 @@ export default function HomePage() {
     category: item.category,
     title: item.title,
     href: `/${item.category}/${item.slug}`,
-    description: item.description,
+    description: item.answerSummaryResolved,
     shortAnswer: item.answerSummaryResolved,
     quickFacts: item.quickFactsResolved,
     relatedQuestions: item.relatedQuestionsResolved,
@@ -23,23 +23,31 @@ export default function HomePage() {
     categoryLabel: item.categoryConfig.label,
   }));
   const hubs = getHubSummaries();
-  const popularQuestions = getPopularQuestions(8);
-  const suggestedQueries = popularQuestions.slice(0, 6).map(({ question, href }) => ({ question, href }));
+  const popularQuestions = getPopularQuestions(10);
+  const heroQuestions = popularQuestions.slice(0, 4);
+  const questionFeed = popularQuestions.slice(4, 10);
+  const suggestedQueries = [
+    { question: "Can CPVC handle hot water safely?", href: "/search?q=Can%20CPVC%20handle%20hot%20water%20safely%3F" },
+    { question: "What causes CPVC pipes to crack?", href: "/search?q=What%20causes%20CPVC%20pipes%20to%20crack%3F" },
+    { question: "How do you size CPVC for a house?", href: "/search?q=How%20do%20you%20size%20CPVC%20for%20a%20house%3F" },
+    { question: "CPVC vs uPVC: which one fits hot water lines?", href: "/search?q=CPVC%20vs%20uPVC%3A%20which%20one%20fits%20hot%20water%20lines%3F" },
+    { question: "What does IS 15778 mean for CPVC pipe?", href: "/search?q=What%20does%20IS%2015778%20mean%20for%20CPVC%20pipe%3F" },
+  ];
   const taskBuckets = getTaskBuckets();
 
   return (
     <div className="mx-auto max-w-7xl px-6 pb-24 pt-10 md:px-10">
-      <HeroShell suggestedQueries={suggestedQueries} mostAsked={popularQuestions} />
+      <HeroShell suggestedQueries={suggestedQueries} mostAsked={heroQuestions} />
 
       <StartWithNeed items={taskBuckets} />
 
-      <PopularQuestions items={popularQuestions} />
+      <PopularQuestions items={questionFeed} />
 
       <section className="mt-16">
         <SectionHeading
           eyebrow="Topic hubs"
-          title="Browse the cluster when you know the area, not the exact question."
-          description="Hubs still matter for depth and internal linking, but they should support user tasks instead of replacing them."
+          title="Browse by topic when you know the area but not yet the exact answer."
+          description="These hubs collect the strongest definitions, guides, and troubleshooting pages for each CPVC topic cluster."
         />
         <div className="mt-8">
           <TopicCardGrid hubs={hubs} />
@@ -51,37 +59,18 @@ export default function HomePage() {
       <section className="mt-16">
         <SectionHeading
           eyebrow="Trusted by readers"
-          title="Useful is not the same as polished. The site has to be both."
-          description="The launch pack carries an overall average of 4.8/5 because the articles are structured for action, not just presentation."
+          title="Readers come here for direct answers they can actually use."
+          description="The strongest pages combine a clear first answer, practical limits, and the next question to ask when the decision gets more technical."
         />
         <div className="mt-8">
-        <ReviewSummary
-          summary={{
-            average: siteConfig.feedback.averageRating,
-            scale: siteConfig.feedback.scale,
-            totalResponses: siteConfig.feedback.totalResponses,
-            recommendationRate: siteConfig.feedback.recommendationRate,
-          }}
-        />
-        </div>
-      </section>
-
-      <section className="mt-16">
-        <SectionHeading
-          eyebrow="Editorial operating model"
-          title="The scaled system is built around control, not volume."
-          description="Publishing, indexing, and trust are handled as separate decisions so the site can safely grow toward 50 articles."
-        />
-        <div className="mt-8 grid gap-4 md:grid-cols-4">
-          {siteConfig.workflow.map((step, index) => (
-            <div
-              key={step}
-              className="rounded-[1.5rem] border border-[color:var(--border)] bg-[color:var(--card)] p-5"
-            >
-              <p className="text-xs uppercase tracking-[0.22em] text-[color:var(--accent)]">Step {index + 1}</p>
-              <p className="mt-3 font-medium">{step}</p>
-            </div>
-          ))}
+          <ReviewSummary
+            summary={{
+              average: siteConfig.feedback.averageRating,
+              scale: siteConfig.feedback.scale,
+              totalResponses: siteConfig.feedback.totalResponses,
+              recommendationRate: siteConfig.feedback.recommendationRate,
+            }}
+          />
         </div>
       </section>
     </div>

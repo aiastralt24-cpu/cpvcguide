@@ -60,6 +60,15 @@ export const publicationManifest: PublicationEntry[] = [
     reviewedAt: "2026-04-07",
   },
   {
+    slug: "what-is-cpvc-made-of",
+    published: true,
+    indexable: false,
+    qualityState: "publishable",
+    reviewer: "Editorial Desk",
+    reviewedAt: "2026-04-08",
+    notes: "Published as a low-risk basics page. Hold indexability until the technical review team confirms the wording is tight enough for long-term ranking.",
+  },
+  {
     slug: "cpvc-temperature-limit",
     published: true,
     indexable: true,

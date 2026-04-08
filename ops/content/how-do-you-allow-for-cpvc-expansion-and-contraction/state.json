@@ -1,0 +1,66 @@
+{
+  "topic": "How to Allow for CPVC Expansion and Contraction",
+  "slug": "how-do-you-allow-for-cpvc-expansion-and-contraction",
+  "primaryQuery": "How do you allow for CPVC expansion and contraction?",
+  "pageType": "article",
+  "category": "technical-guides",
+  "pillar": "Technical Properties",
+  "intentType": "application",
+  "audience": "To be defined in research brief",
+  "createdAt": "2026-04-08",
+  "updatedAt": "2026-04-08",
+  "currentStage": "topic-intake",
+  "similarityDecision": "proceed",
+  "publication": {
+    "qualityState": "raw",
+    "published": false,
+    "indexable": false,
+    "reviewer": "",
+    "reviewedAt": "",
+    "notes": ""
+  },
+  "stages": {
+    "topicIntake": {
+      "status": "approved",
+      "owner": "Content Ops",
+      "completedAt": "2026-04-08"
+    },
+    "researchBrief": {
+      "status": "pending",
+      "owner": "",
+      "completedAt": "",
+      "notes": ""
+    },
+    "draft": {
+      "status": "pending",
+      "owner": "",
+      "completedAt": "",
+      "notes": ""
+    },
+    "editorialReview": {
+      "status": "pending",
+      "owner": "",
+      "completedAt": "",
+      "notes": ""
+    },
+    "technicalReview": {
+      "status": "pending",
+      "owner": "",
+      "completedAt": "",
+      "notes": ""
+    },
+    "publishDecision": {
+      "status": "pending",
+      "owner": "",
+      "completedAt": "",
+      "notes": ""
+    },
+    "indexabilityDecision": {
+      "status": "pending",
+      "owner": "",
+      "completedAt": "",
+      "notes": ""
+    }
+  },
+  "scorecard": null
+}

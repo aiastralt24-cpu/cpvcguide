@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { HeroSearch } from "@/components/hero/hero-search";
 import { SearchAnswerCard } from "@/components/search/search-answer-card";
 import { SearchEmptyState } from "@/components/search/search-empty-state";
 import { SearchRelatedQuestions } from "@/components/search/search-related-questions";
@@ -33,6 +34,10 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
             : "Use direct technical questions for best results: temperature limits, joining, sizing, standards, and failure symptoms."
         }
       />
+
+      <div className="mt-8 rounded-[2rem] border border-[color:var(--border)] bg-[linear-gradient(180deg,rgba(253,249,242,0.95),rgba(255,255,255,0.9))] p-6 md:p-8">
+        <HeroSearch initialQuery={query} autoFocus={!query} />
+      </div>
 
       <div className="mt-10 space-y-10">
         {topResult ? (

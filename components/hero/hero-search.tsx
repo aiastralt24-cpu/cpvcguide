@@ -8,16 +8,36 @@ type Suggestion = {
   href: string;
 };
 
-export function HeroSearch() {
-  const [query, setQuery] = useState("");
+type HeroSearchProps = {
+  initialQuery?: string;
+  autoFocus?: boolean;
+  suggestionTarget?: "search" | "article";
+};
+
+export function HeroSearch({
+  initialQuery = "",
+  autoFocus = false,
+  suggestionTarget = "search",
+}: HeroSearchProps) {
+  const [query, setQuery] = useState(initialQuery);
   const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
   const router = useRouter();
 
   useEffect(() => {
+    setQuery(initialQuery);
+  }, [initialQuery]);
+
+  useEffect(() => {
+    const trimmed = query.trim();
+    if (!trimmed) {
+      setSuggestions([]);
+      return;
+    }
+
     const controller = new AbortController();
     const timer = setTimeout(async () => {
       try {
-        const response = await fetch(`/api/suggestions?q=${encodeURIComponent(query)}`, {
+        const response = await fetch(`/api/suggestions?q=${encodeURIComponent(trimmed)}`, {
           signal: controller.signal,
         });
         const data = (await response.json()) as { suggestions: Suggestion[] };
@@ -40,13 +60,23 @@ export function HeroSearch() {
     router.push(`/search?q=${encodeURIComponent(trimmed)}`);
   }
 
+  function onSuggestionSelect(suggestion: Suggestion) {
+    if (suggestionTarget === "article") {
+      router.push(suggestion.href);
+      return;
+    }
+
+    router.push(`/search?q=${encodeURIComponent(suggestion.question)}`);
+  }
+
   return (
-    <div className="relative">
-      <form onSubmit={onSubmit} className="w-full max-w-4xl">
+    <div className="relative w-full max-w-4xl">
+      <form onSubmit={onSubmit} className="w-full">
         <div className="flex rounded-[1.75rem] border border-[color:var(--border)] bg-white/80 p-2 shadow-[var(--shadow)]">
           <input
             value={query}
             onChange={(event) => setQuery(event.target.value)}
+            autoFocus={autoFocus}
             placeholder="Ask about installation, temperature limits, standards, failures, or sizing..."
             className="h-14 flex-1 rounded-[1.25rem] bg-transparent px-4 text-base outline-none"
           />
@@ -59,14 +89,14 @@ export function HeroSearch() {
         </div>
       </form>
       {suggestions.length > 0 ? (
-        <div className="absolute mt-3 w-full max-w-3xl rounded-[1.5rem] border border-[color:var(--border)] bg-[color:var(--card)] p-3 shadow-[var(--shadow)]">
-          <div className="grid gap-2">
+        <div className="absolute inset-x-0 top-full z-30 mt-3 overflow-hidden rounded-[1.5rem] border border-[color:var(--border)] bg-[color:var(--card)] shadow-[var(--shadow)]">
+          <div className="grid gap-px bg-[color:var(--border)]">
             {suggestions.map((suggestion) => (
               <button
                 key={suggestion.href}
                 type="button"
-                onClick={() => router.push(suggestion.href)}
-                className="rounded-2xl px-4 py-3 text-left text-sm transition hover:bg-white/70"
+                onClick={() => onSuggestionSelect(suggestion)}
+                className="bg-[color:var(--card)] px-5 py-4 text-left text-base transition hover:bg-white/70"
               >
                 {suggestion.question}
               </button>
