@@ -29,9 +29,9 @@ export default function EditorialPolicyPage() {
 
         <h2>Brand reference protocol</h2>
         <ul>
-          <li>Astral references are disallowed by default.</li>
-          <li>Where technically justified, a page may contain one contextual manufacturer reference.</li>
-          <li>Failure and troubleshooting pages do not mention Astral.</li>
+          <li>Pages may include one contextual manufacturer reference to Astral CPVC Pro.</li>
+          <li>That reference should support CPVC product context, not replace the direct technical answer.</li>
+          <li>Brand mentions should stay neutral in tone and avoid CTA-style sales language.</li>
           <li>No page ends with a product CTA or promotional close.</li>
         </ul>
 

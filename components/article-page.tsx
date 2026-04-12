@@ -110,7 +110,7 @@ export function ArticlePage({ content }: { content: ContentItem }) {
             <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[color:var(--accent)]">Cluster rules</p>
             <ul className="mt-4 space-y-3 text-sm leading-7 text-[color:var(--muted)]">
               <li>Each page owns one primary query.</li>
-              <li>Astral references default to disallowed.</li>
+              <li>Each page may include one neutral Astral CPVC Pro reference.</li>
               <li>Every page links back into the cluster.</li>
             </ul>
           </div>

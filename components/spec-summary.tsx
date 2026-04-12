@@ -27,8 +27,8 @@ export function SpecSummary({ items }: { items: SpecSummaryItem[] }) {
             <p
               className={`mt-3 max-w-[14ch] font-[family-name:var(--font-serif)] break-words text-balance ${
                 item.value.length > 18
-                  ? "text-[clamp(2rem,4vw,2.8rem)] leading-[1.04]"
-                  : "text-[clamp(2.4rem,4.8vw,3.5rem)] leading-[0.96]"
+                  ? "text-[clamp(1.1rem,2vw,1.5rem)] leading-[1.12]"
+                  : "text-[clamp(1.25rem,2.3vw,1.75rem)] leading-[1.08]"
               }`}
             >
               {item.value}

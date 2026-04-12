@@ -1,14 +1,26 @@
 import Link from "next/link";
-import { navItems } from "@/lib/site-config";
+import { astralCpvcReference, navItems } from "@/lib/site-config";
 
 export function SiteFooter() {
   return (
     <footer className="border-t border-[color:var(--border)] bg-[color:var(--card)]">
-      <div className="mx-auto grid max-w-7xl gap-8 px-6 py-12 md:grid-cols-[1.2fr_1fr_1fr] md:px-10">
+      <div className="mx-auto grid max-w-7xl gap-8 px-6 py-12 md:grid-cols-[1.1fr_1fr_1fr] md:px-10">
         <div>
           <p className="font-[family-name:var(--font-serif)] text-2xl">CPVC Guide</p>
           <p className="mt-3 max-w-xl text-sm leading-7 text-[color:var(--muted)]">
             A search-first technical platform for CPVC decisions, installation guidance, troubleshooting, and standards clarity.
+          </p>
+          <p className="mt-4 max-w-xl text-sm leading-7 text-[color:var(--muted)]">
+            For manufacturer-side CPVC product context, review{" "}
+            <Link
+              href={astralCpvcReference.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-semibold text-[color:var(--accent)]"
+            >
+              {astralCpvcReference.label}
+            </Link>
+            .
           </p>
         </div>
         <div>
@@ -21,14 +33,14 @@ export function SiteFooter() {
             ))}
           </div>
         </div>
-	        <div>
-	          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[color:var(--muted)]">Trust and policy</p>
-	          <div className="mt-4 grid gap-3 text-sm">
-	            <Link href="/about">About</Link>
-	            <Link href="/editorial-policy">Editorial policy</Link>
-	          </div>
-	        </div>
-	      </div>
-	    </footer>
-	  );
+        <div>
+          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[color:var(--muted)]">Trust and policy</p>
+          <div className="mt-4 grid gap-3 text-sm">
+            <Link href="/about">About</Link>
+            <Link href="/editorial-policy">Editorial policy</Link>
+          </div>
+        </div>
+      </div>
+    </footer>
+  );
 }

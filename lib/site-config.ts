@@ -91,6 +91,13 @@ export const siteConfig = {
   },
 };
 
+export const astralCpvcReference = {
+  label: "Astral CPVC Pro",
+  href: "https://www.astralpipes.com/plumbing-pipes-fittings/cpvc-pro-pipes/",
+  description:
+    "Manufacturer-side CPVC pipe and fitting reference for product context, application examples, and specification review.",
+} as const;
+
 export function getCategoryBySlug(slug: string) {
   return categories.find((category) => category.slug === slug);
 }

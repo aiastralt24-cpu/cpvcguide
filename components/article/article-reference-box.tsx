@@ -13,8 +13,13 @@ export function ArticleReferenceBox({ article }: { article: Article }) {
             <p className="font-semibold">{reference.label}</p>
             <p className="mt-2 text-sm leading-7 text-[color:var(--muted)]">{reference.body}</p>
             {reference.href ? (
-              <Link href={reference.href} className="mt-2 inline-block text-sm font-semibold text-[color:var(--accent)]">
-                See the editorial policy
+              <Link
+                href={reference.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-2 inline-block text-sm font-semibold text-[color:var(--accent)]"
+              >
+                Review Astral CPVC Pro
               </Link>
             ) : null}
           </div>

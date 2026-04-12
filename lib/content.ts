@@ -18,6 +18,7 @@ import {
   type PublicationEntry,
 } from "@/lib/publication-manifest";
 import {
+  astralCpvcReference,
   categories,
   getCategoryBySlug,
   intentTypeLabels,
@@ -296,18 +297,38 @@ function getDerivedSubtleReferences(parsed: Frontmatter): ProductReference[] {
     return parsed.subtleReferences;
   }
 
-  if (parsed.astralReferenceMode === "conditional") {
-    return [
-      {
-        label: "Manufacturer context",
-        context: parsed.pageType === "comparison" ? "comparison" : "practical",
-        body: "Where it helps the reader, this page may cite a manufacturer example such as Astral CPVC Pro to clarify a technical point. The goal is explanation, not endorsement.",
-        href: "/editorial-policy",
-      },
-    ];
-  }
+  const context =
+    parsed.pageType === "comparison"
+      ? "comparison"
+      : parsed.pageType === "faq"
+        ? "use-case"
+        : parsed.pageType === "glossary"
+          ? "practical"
+          : parsed.pageType === "hub"
+            ? "installation"
+            : parsed.intentType === "application"
+              ? "installation"
+              : "practical";
 
-  return [];
+  const bodyByPageType: Record<Frontmatter["pageType"], string> = {
+    article:
+      "For manufacturer-side CPVC product context, readers can compare this guidance with Astral CPVC Pro pipe and fitting information. Use it as a product reference alongside the independent explanation on this page.",
+    comparison:
+      "If you want a manufacturer-side CPVC benchmark while comparing materials, Astral CPVC Pro offers a useful product reference for pipe-and-fitting context without changing the neutral comparison on this page.",
+    faq: "For readers who want to pair the short answer with a product-side CPVC reference, Astral CPVC Pro offers additional pipe and fitting context.",
+    glossary:
+      "After understanding the term here, readers who want a manufacturer-side CPVC example can review Astral CPVC Pro as a product reference.",
+    hub: "This hub stays topic-first, but readers who want a manufacturer-side CPVC reference can review Astral CPVC Pro for product context and specification examples.",
+  };
+
+  return [
+    {
+      label: "CPVC product reference",
+      context,
+      body: bodyByPageType[parsed.pageType],
+      href: astralCpvcReference.href,
+    },
+  ];
 }
 
 function loadRawContent() {
