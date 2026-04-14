@@ -12,8 +12,10 @@ const requiredHubCategories = new Set([
   "standards",
 ]);
 const publicationManifestSource = fs.readFileSync(path.join(root, "lib", "publication-manifest.ts"), "utf8");
-const publicationManifest = [...publicationManifestSource.matchAll(/slug:\s+"([^"]+)"/g)].map((match) => ({
+const publicationManifest = [...publicationManifestSource.matchAll(/\{\s*slug:\s+"([^"]+)"([\s\S]*?)\n\s*\}/g)].map((match) => ({
   slug: match[1],
+  qualityState: match[2].match(/qualityState:\s+"([^"]+)"/)?.[1],
+  indexable: match[2].match(/indexable:\s+(true|false)/)?.[1] === "true",
 }));
 
 function getFiles(dir) {
@@ -66,6 +68,42 @@ function ensureShape(items) {
 
     if (!Array.isArray(item.relatedSlugs) || item.relatedSlugs.length < 2) {
       throw new Error(`relatedSlugs must contain at least 2 slugs in ${item.file}`);
+    }
+  }
+}
+
+function ensureAnswerEngineReadiness(items) {
+  for (const item of items) {
+    const body = fs.readFileSync(item.file, "utf8");
+    const quickFacts = Array.isArray(item.quickFacts) ? item.quickFacts : [];
+    const specSummary = Array.isArray(item.specSummary) ? item.specSummary : [];
+    const comparisonRows = Array.isArray(item.comparisonRows) ? item.comparisonRows : [];
+    const faqItems = Array.isArray(item.faqItems) ? item.faqItems : [];
+    const relatedQuestions = Array.isArray(item.relatedQuestions) ? item.relatedQuestions : [];
+    const hasStructuredHeadings = (body.match(/^##\s+/gm) ?? []).length >= 2;
+    const hasCautionSignal =
+      /\b(limit|limits|mistake|mistakes|avoid|only when|unless|do not|should not|risk|risks|caution|not true|depends)\b/i.test(body);
+
+    if (!hasStructuredHeadings) {
+      throw new Error(`Expected at least two H2 sections in ${item.file}`);
+    }
+
+    if (item.pageType === "article" || item.pageType === "comparison") {
+      if (specSummary.length === 0 && quickFacts.length === 0 && comparisonRows.length === 0) {
+        throw new Error(`Expected specSummary, quickFacts, or comparisonRows in ${item.file}`);
+      }
+
+      if (faqItems.length === 0 && relatedQuestions.length === 0) {
+        throw new Error(`Expected faqItems or relatedQuestions in ${item.file}`);
+      }
+    }
+
+    if (item.pageType === "faq" && faqItems.length === 0 && relatedQuestions.length === 0) {
+      throw new Error(`Expected faqItems or relatedQuestions in ${item.file}`);
+    }
+
+    if ((item.pageType === "article" || item.pageType === "comparison") && !hasCautionSignal) {
+      throw new Error(`Expected a practical limit or caution signal in ${item.file}`);
     }
   }
 }
@@ -134,6 +172,12 @@ function ensurePublicationManifest(items) {
       throw new Error(`Manifest entry found for missing content slug ${slug}`);
     }
   }
+
+  for (const item of publicationManifest) {
+    if (item.qualityState === "publishable" && item.indexable) {
+      throw new Error(`Manifest entry ${item.slug} is publishable but still indexable.`);
+    }
+  }
 }
 
 const items = loadItems();
@@ -143,6 +187,7 @@ if (items.length < 30) {
 }
 
 ensureShape(items);
+ensureAnswerEngineReadiness(items);
 ensureNoDuplicatePrimaryQuery(items);
 ensureHubCoverage(items);
 ensureRelations(items);

@@ -7,7 +7,8 @@
 - Vercel deployment target
 - Category-based URLs
 - Build-time metadata validation
-- Astral references disallowed by default
+- One neutral Astral CPVC Pro reference allowed per page where it supports CPVC product context
+- Publishable and indexable-ready are separate and enforced states
 
 ## Required page modules
 - Quick Answer
@@ -30,4 +31,6 @@
 - No duplicate primary queries
 - No orphan pages in starter pack
 - Structured data on content pages
+- Root-level WebSite and publisher structured data
 - Canonical routes on all public pages
+- Answer-engine fields required for live content

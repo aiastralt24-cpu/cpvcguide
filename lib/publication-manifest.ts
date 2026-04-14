@@ -10,6 +10,10 @@ export type PublicationEntry = {
   notes?: string;
 };
 
+export function isQualityStateIndexable(state: QualityState) {
+  return state === "indexable-ready";
+}
+
 export const publicationManifest: PublicationEntry[] = [
   {
     slug: "cpvc-fundamentals-hub",
@@ -87,7 +91,7 @@ export const publicationManifest: PublicationEntry[] = [
   {
     slug: "where-cpvc-should-not-be-used",
     published: true,
-    indexable: true,
+    indexable: false,
     qualityState: "publishable",
     reviewer: "Technical Review Team",
     reviewedAt: "2026-04-07",
@@ -104,7 +108,7 @@ export const publicationManifest: PublicationEntry[] = [
   {
     slug: "cpvc-support-spacing",
     published: true,
-    indexable: true,
+    indexable: false,
     qualityState: "publishable",
     reviewer: "Technical Review Team",
     reviewedAt: "2026-04-07",
@@ -137,7 +141,7 @@ export const publicationManifest: PublicationEntry[] = [
   {
     slug: "how-to-size-cpvc-for-a-house",
     published: true,
-    indexable: true,
+    indexable: false,
     qualityState: "publishable",
     reviewer: "Technical Review Team",
     reviewedAt: "2026-04-07",
@@ -154,7 +158,7 @@ export const publicationManifest: PublicationEntry[] = [
   {
     slug: "cpvc-vs-ppr",
     published: true,
-    indexable: true,
+    indexable: false,
     qualityState: "publishable",
     reviewer: "Editorial Desk",
     reviewedAt: "2026-04-07",
@@ -171,7 +175,7 @@ export const publicationManifest: PublicationEntry[] = [
   {
     slug: "cpvc-vs-gi-pipe",
     published: true,
-    indexable: true,
+    indexable: false,
     qualityState: "publishable",
     reviewer: "Editorial Desk",
     reviewedAt: "2026-04-07",
@@ -203,7 +207,7 @@ export const publicationManifest: PublicationEntry[] = [
   {
     slug: "does-sunlight-damage-cpvc",
     published: true,
-    indexable: true,
+    indexable: false,
     qualityState: "publishable",
     reviewer: "Editorial Desk",
     reviewedAt: "2026-04-07",
@@ -219,7 +223,7 @@ export const publicationManifest: PublicationEntry[] = [
   {
     slug: "can-cpvc-be-threaded",
     published: true,
-    indexable: true,
+    indexable: false,
     qualityState: "publishable",
     reviewer: "Technical Review Team",
     reviewedAt: "2026-04-07",
@@ -235,7 +239,7 @@ export const publicationManifest: PublicationEntry[] = [
   {
     slug: "cts",
     published: true,
-    indexable: true,
+    indexable: false,
     qualityState: "publishable",
     reviewer: "Editorial Desk",
     reviewedAt: "2026-04-07",
@@ -243,7 +247,7 @@ export const publicationManifest: PublicationEntry[] = [
   {
     slug: "sdr",
     published: true,
-    indexable: true,
+    indexable: false,
     qualityState: "publishable",
     reviewer: "Editorial Desk",
     reviewedAt: "2026-04-07",
@@ -251,7 +255,7 @@ export const publicationManifest: PublicationEntry[] = [
   {
     slug: "water-hammer",
     published: true,
-    indexable: true,
+    indexable: false,
     qualityState: "publishable",
     reviewer: "Editorial Desk",
     reviewedAt: "2026-04-07",

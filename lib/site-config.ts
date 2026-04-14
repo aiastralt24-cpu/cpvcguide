@@ -81,7 +81,11 @@ export const siteConfig = {
   title: "CPVC Guide",
   description:
     "A deep technical content platform for CPVC plumbing systems, built for answer engines, search visibility, and practical decision support.",
-  siteUrl: process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000",
+  siteUrl: getPublicSiteUrl(),
+  organizationName: "CPVC Guide Editorial Team",
+  publisherType: "Organization",
+  socialImagePath: "/opengraph-image",
+  publisherLogoPath: "/logo-mark.svg",
   workflow: ["Brief", "Draft", "Review", "Publish", "90-day refresh"],
   feedback: {
     averageRating: 4.8,
@@ -97,6 +101,24 @@ export const astralCpvcReference = {
   description:
     "Manufacturer-side CPVC pipe and fitting reference for product context, application examples, and specification review.",
 } as const;
+
+function getPublicSiteUrl() {
+  const raw =
+    process.env.NEXT_PUBLIC_SITE_URL ||
+    process.env.NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL ||
+    process.env.VERCEL_PROJECT_PRODUCTION_URL;
+
+  if (!raw) {
+    if (process.env.VERCEL || process.env.CI === "true") {
+      throw new Error("Missing public site URL. Set NEXT_PUBLIC_SITE_URL for production builds.");
+    }
+
+    return "http://localhost:3000";
+  }
+
+  const normalized = raw.startsWith("http://") || raw.startsWith("https://") ? raw : `https://${raw}`;
+  return normalized.replace(/\/$/, "");
+}
 
 export function getCategoryBySlug(slug: string) {
   return categories.find((category) => category.slug === slug);

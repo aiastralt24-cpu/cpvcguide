@@ -1,13 +1,12 @@
 import type { Metadata } from "next";
 import { PageIntro } from "@/components/page-intro";
+import { buildPageMetadata } from "@/lib/metadata";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildPageMetadata({
   title: "Editorial Policy",
   description: "The publishing rules, trust signals, citation approach, and brand-reference protocol for CPVC Guide.",
-  alternates: {
-    canonical: "/editorial-policy",
-  },
-};
+  path: "/editorial-policy",
+});
 
 export default function EditorialPolicyPage() {
   return (
@@ -25,6 +24,7 @@ export default function EditorialPolicyPage() {
           <li>Every page needs a clear primary intent and one primary query.</li>
           <li>Technical claims must be specific, contextual, and written in plain English.</li>
           <li>Pages covering standards, potable water, or safety must include defensible reference points.</li>
+          <li>Pages should expose a strong answer-engine extraction pattern: direct answer, summary facts, limits, and next questions.</li>
         </ul>
 
         <h2>Brand reference protocol</h2>
@@ -41,6 +41,13 @@ export default function EditorialPolicyPage() {
           standards updates become available. Low-performing or overlapping pages should be refreshed, consolidated,
           or retired rather than allowed to drift.
         </p>
+
+        <h2>Indexing policy</h2>
+        <ul>
+          <li>Published does not automatically mean indexable.</li>
+          <li>Only pages that are judged strong enough to rank should remain indexable.</li>
+          <li>Pages that are merely publishable should stay available to readers but default to noindex until upgraded.</li>
+        </ul>
       </div>
     </div>
   );

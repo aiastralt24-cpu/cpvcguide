@@ -11,6 +11,7 @@ import {
   type ReviewThread,
 } from "@/lib/content-schema";
 import {
+  isQualityStateIndexable,
   plannedArticleBacklog,
   publicationManifest,
   publicationManifestBySlug,
@@ -84,6 +85,13 @@ function formatDate(value: string) {
     month: "short",
     year: "numeric",
   }).format(new Date(value));
+}
+
+function getEffectivePublication(publication: PublicationEntry): PublicationEntry {
+  return {
+    ...publication,
+    indexable: publication.indexable && isQualityStateIndexable(publication.qualityState),
+  };
 }
 
 function readDirectoryFiles(dir: string) {
@@ -347,10 +355,11 @@ function loadRawContent() {
       throw new Error(`Hub page ${parsed.slug} targets category ${parsed.category}, which is not hub-driven.`);
     }
 
-    const publication = publicationManifestBySlug.get(parsed.slug);
-    if (!publication) {
+    const publicationEntry = publicationManifestBySlug.get(parsed.slug);
+    if (!publicationEntry) {
       throw new Error(`Missing publication manifest entry for ${parsed.slug}`);
     }
+    const publication = getEffectivePublication(publicationEntry);
 
     const quickFactsResolved = getDerivedQuickFacts(parsed);
     const relatedQuestionsResolved = getDerivedRelatedQuestions(parsed);

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import type { ContentItem } from "@/lib/content";
-import { buildAbsoluteUrl } from "@/lib/metadata";
+import { buildAbsoluteUrl, getDefaultSocialImage } from "@/lib/metadata";
+import { siteConfig } from "@/lib/site-config";
 
 export function buildSearchMetadata(query?: string): Metadata {
   const title = query ? `Search results for "${query}" | CPVC Guide` : "Search CPVC Guide";
@@ -17,6 +18,20 @@ export function buildSearchMetadata(query?: string): Metadata {
     robots: {
       index: false,
       follow: true,
+    },
+    openGraph: {
+      title,
+      description,
+      type: "website",
+      url: buildAbsoluteUrl("/search"),
+      siteName: siteConfig.title,
+      images: getDefaultSocialImage(),
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: getDefaultSocialImage().map((image) => image.url),
     },
   };
 }
@@ -35,6 +50,16 @@ export function buildArticleMetadata(content: ContentItem): Metadata {
       description: content.description,
       type: "article",
       url: buildAbsoluteUrl(`/${content.category}/${content.slug}`),
+      siteName: siteConfig.title,
+      publishedTime: content.publishedAt,
+      modifiedTime: content.updatedAt,
+      images: getDefaultSocialImage(),
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: content.title,
+      description: content.description,
+      images: getDefaultSocialImage().map((image) => image.url),
     },
   };
 }

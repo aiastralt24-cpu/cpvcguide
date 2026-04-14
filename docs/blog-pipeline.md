@@ -111,8 +111,10 @@ Each article should be scored on:
 
 - Do not publish because the draft sounds polished.
 - Do not index because a page exists.
+- Do not keep `publishable` pages indexable by default.
 - Do not let overlap create cannibalization.
 - Do not allow generic SEO writing into the live set.
+- Do not let brand references overpower the CPVC answer itself.
 
 ## Automation Commands
 

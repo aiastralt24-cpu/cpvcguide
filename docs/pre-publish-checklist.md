@@ -9,9 +9,13 @@
 - FAQ block is present where required
 - Related reading points to live pages
 - Breadcrumb and canonical route match the public URL
+- Schema is present and matches the page type
+- Noindex/index state matches the publication decision
+- Answer-engine extraction is strong in the opening screenful
 - Any standards or safety claims are contextually supported
 - Astral mention, if present, follows policy
 - Page is readable on mobile
+- One primary query and one ranking intent are clearly preserved
 - Page fits the intended category and pillar
 - Editorial review is complete
 - Technical review is complete

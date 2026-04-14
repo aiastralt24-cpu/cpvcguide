@@ -78,7 +78,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
               href={`/${item.category}/${item.slug}`}
               eyebrow={item.pageTypeLabel}
               title={item.title}
-              description={item.description}
+              description={item.answerSummaryResolved}
             />
           ))}
         </div>

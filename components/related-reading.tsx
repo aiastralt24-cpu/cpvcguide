@@ -21,7 +21,7 @@ export function RelatedReading({ items }: { items: ContentItem[] }) {
           >
             <p className="text-xs uppercase tracking-[0.18em] text-[color:var(--muted)]">{item.pageTypeLabel}</p>
             <h3 className="mt-2 font-[family-name:var(--font-serif)] text-xl">{item.title}</h3>
-            <p className="mt-3 text-sm leading-7 text-[color:var(--muted)]">{item.description}</p>
+            <p className="mt-3 text-sm leading-7 text-[color:var(--muted)]">{item.answerSummaryResolved}</p>
           </Link>
         ))}
       </div>

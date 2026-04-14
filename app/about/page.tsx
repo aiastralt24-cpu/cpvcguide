@@ -1,13 +1,12 @@
 import type { Metadata } from "next";
 import { PageIntro } from "@/components/page-intro";
+import { buildPageMetadata } from "@/lib/metadata";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildPageMetadata({
   title: "About CPVC Guide",
   description: "Why CPVC Guide exists, who it serves, and how the site approaches technical editorial work.",
-  alternates: {
-    canonical: "/about",
-  },
-};
+  path: "/about",
+});
 
 export default function AboutPage() {
   return (
