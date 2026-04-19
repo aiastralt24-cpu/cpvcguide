@@ -67,6 +67,44 @@ type LocalitySeed = {
 
 const updatedAt = "2026-04-19";
 
+const productGuidanceBySlug: Record<string, { decision: string; checks: string; mistake: string }> = {
+  "cpvc-pipes": {
+    decision: "Use this page as the broad CPVC pipe overview for domestic hot and cold water lines, then move into size, fitting, temperature, and installation pages for project-specific decisions.",
+    checks: "Check pipe series, markings, rated use, compatible fittings, support spacing, and whether the run includes heaters, long branches, or exposed sections.",
+    mistake: "The common mistake is treating a pipe label as the whole system specification without checking fittings, support, solvent cement, and service conditions.",
+  },
+  "cpvc-fittings": {
+    decision: "Use this page when the project depends on elbows, tees, couplers, unions, transition fittings, and fixture connections rather than straight pipe alone.",
+    checks: "Check fitting compatibility, insertion depth, transition points, alignment, and whether threaded or metal transitions create extra stress.",
+    mistake: "The common mistake is forcing misaligned fittings or overtightening transitions, which can create joint stress even when the pipe itself is suitable.",
+  },
+  "cpvc-hot-water-pipes": {
+    decision: "Use this page for hot-water distribution decisions where temperature, heater outlet detail, pressure, and thermal movement matter more than a generic pipe-size answer.",
+    checks: "Check expected water temperature, heater connection requirements, pressure, pipe support, expansion movement, and distance from high-heat sources.",
+    mistake: "The common mistake is assuming every hot-water line is the same instead of checking whether the actual service stays within rated conditions.",
+  },
+  "cpvc-solvent-cement": {
+    decision: "Use this page for joint quality, leak prevention, and installer discipline because solvent cement performance depends heavily on preparation and assembly.",
+    checks: "Check square cutting, deburring, cleaning, cement compatibility, full insertion, hold time, curing time, and pressure testing sequence.",
+    mistake: "The common mistake is calling solvent cement glue and rushing the joint before the material-specific joining process has set correctly.",
+  },
+  "cpvc-pipe-size-chart": {
+    decision: "Use this page to frame sizing questions around fixture demand, run length, branch reduction, and available pressure rather than copying one universal size.",
+    checks: "Check fixture count, simultaneous demand, pressure, pipe length, number of bends, branch layout, and whether the line serves one fixture or a group.",
+    mistake: "The common mistake is reducing pipe too early in the layout and then blaming the material for low flow at fixtures.",
+  },
+  "cpvc-pressure-rating": {
+    decision: "Use this page when the question is pressure, temperature, and derating rather than simple material selection.",
+    checks: "Check rated pressure, operating temperature, pressure surges, support, fittings, and whether the line has pump or heater-related stress.",
+    mistake: "The common mistake is quoting one pressure number without the temperature and service condition that makes the number meaningful.",
+  },
+  "cpvc-installation-guide": {
+    decision: "Use this page for the field sequence: cutting, preparing, cementing, supporting, testing, and avoiding installation shortcuts.",
+    checks: "Check tools, cut quality, joint preparation, support spacing, cure time, pressure testing, and protection from mechanical damage.",
+    mistake: "The common mistake is treating installation as a minor step when most CPVC failures are tied to stress, bad joints, or poor support.",
+  },
+};
+
 export const productSeeds: ProductSeed[] = [
   { slug: "cpvc-pipes", label: "CPVC pipes", intent: "hot and cold water plumbing", fit: "new home, apartment, villa, and renovation plumbing lines" },
   { slug: "cpvc-fittings", label: "CPVC fittings", intent: "pipe direction changes and fixture connections", fit: "elbows, tees, couplers, unions, transition points, and branch lines" },
@@ -324,6 +362,26 @@ function productLinks() {
   }));
 }
 
+function duplicateCityNames() {
+  const counts = new Map<string, number>();
+  for (const city of citySeeds) {
+    counts.set(city.name, (counts.get(city.name) ?? 0) + 1);
+  }
+  return new Set([...counts.entries()].filter(([, count]) => count > 1).map(([name]) => name));
+}
+
+function cityPageName(city: CitySeed) {
+  return duplicateCityNames().has(city.name) ? `${city.name}, ${city.state}` : city.name;
+}
+
+function statePrimaryQuery(state: StateSeed) {
+  if (["Delhi", "Chandigarh", "Puducherry"].includes(state.name)) {
+    return `CPVC plumbing guide for ${state.name} region`;
+  }
+
+  return `CPVC plumbing guide for ${state.name}`;
+}
+
 function astralSection() {
   return {
     heading: "Where Astral CPVC Pro fits into the decision",
@@ -372,6 +430,146 @@ function classifyContext(text: string) {
   return {
     label: "Local project context",
     note: "The page should be used to frame local plumbing questions before confirming product rating, pipe size, fittings, and installer capability.",
+  };
+}
+
+function statePlanningProfile(state: StateSeed, stateCities: CitySeed[]) {
+  const context = state.context.toLowerCase();
+  const cityList = stateCities.map((city) => city.name).join(", ");
+  const cityPhrase = cityList || "the main city and district clusters";
+
+  if (context.includes("coastal") || context.includes("island") || context.includes("humidity") || context.includes("humid")) {
+    return {
+      planningLabel: `Coastal and humidity planning in ${state.name}`,
+      planningBody: `${state.name} should be read through a humidity-first lens: exposed sections, shafts, terraces, and coastal building maintenance can matter as much as the pipe material. Use ${cityPhrase} to narrow the decision before checking CPVC size, support, and joining quality.`,
+      riskLabel: "Main mistake to avoid",
+      riskBody: "Do not turn coastal context into a simple material claim. The better check is whether the whole CPVC system is protected, supported, correctly joined, and suitable for the actual hot and cold water service.",
+    };
+  }
+
+  if (context.includes("hill") || context.includes("temperature") || context.includes("cold") || context.includes("terrain")) {
+    return {
+      planningLabel: `Hill and temperature planning in ${state.name}`,
+      planningBody: `${state.name} needs more caution around routing, exposed runs, support, and hot-water planning than a flat city checklist. Pages for ${cityPhrase} should help readers separate normal domestic plumbing from colder or terrain-sensitive site conditions.`,
+      riskLabel: "Where generic CPVC advice becomes weak",
+      riskBody: "A state-level answer is not enough for hill, cold, or terrain-sensitive projects. Confirm the service temperature, protection from exposure, support spacing, and whether the installer has handled similar local conditions.",
+    };
+  }
+
+  if (context.includes("hard-water") || context.includes("hot climate") || context.includes("hot-weather")) {
+    return {
+      planningLabel: `Hot-climate and water-condition planning in ${state.name}`,
+      planningBody: `${state.name} has CPVC demand shaped by heat, water-condition questions, and growing residential work. Use ${cityPhrase} for the local pattern, then check pressure, temperature, pipe size, and fitting compatibility instead of relying on one broad state answer.`,
+      riskLabel: "Selection limit",
+      riskBody: "Hard-water or hot-weather context can influence buying discussions, but it does not remove the need to verify product rating, heater details, installation support, and joint quality.",
+    };
+  }
+
+  if (context.includes("industrial") || context.includes("commercial")) {
+    return {
+      planningLabel: `Industrial-town and commercial planning in ${state.name}`,
+      planningBody: `${state.name} often needs CPVC guidance for worker housing, mixed-use buildings, institutions, and commercial interiors. City pages such as ${cityPhrase} should separate domestic hot-water lines from higher-use or non-domestic plumbing assumptions.`,
+      riskLabel: "Use-case boundary",
+      riskBody: "Do not assume a domestic CPVC guide covers every commercial or industrial site. Confirm whether the line is only for potable domestic water and whether pressure, temperature, and usage cycles are within the selected system's limits.",
+    };
+  }
+
+  if (context.includes("redevelopment") || context.includes("renovation") || context.includes("old-building") || context.includes("dense")) {
+    return {
+      planningLabel: `Renovation-led planning in ${state.name}`,
+      planningBody: `${state.name} has many CPVC decisions tied to replacements, builder floors, dense housing, and older lines. Use ${cityPhrase} to understand whether the project is a fresh installation, a partial replacement, or a transition from an existing material.`,
+      riskLabel: "Transition mistake",
+      riskBody: "Renovation projects fail when new pipe is selected without checking old-line transitions, access constraints, threaded connections, and whether existing pressure or heater conditions are suitable.",
+    };
+  }
+
+  return {
+    planningLabel: `Regional CPVC planning in ${state.name}`,
+    planningBody: `${state.name} needs city-led CPVC guidance because ${state.context}. Start with ${cityPhrase}, then use product and installation pages to check size, pressure, fittings, support, and hot-water conditions.`,
+    riskLabel: "State-page limit",
+    riskBody: "A state page should guide the next question, not replace a project specification. Final selection still needs the exact building use case, water demand, pipe series, fittings, and installer discipline.",
+  };
+}
+
+function cityPlanningProfile(city: CitySeed) {
+  const text = `${city.buildingContext} ${city.waterContext}`.toLowerCase();
+
+  if (text.includes("coastal") || text.includes("humidity") || text.includes("humid")) {
+    return {
+      type: "coastal",
+      title: "Coastal-site selection lens",
+      application: `In ${city.name}, CPVC is usually considered where bathrooms, kitchens, utility lines, and hospitality or apartment projects need hot and cold water distribution without turning the choice into a metal-versus-polymer slogan.`,
+      risk: `The local watchpoint is moisture-heavy construction. Protect exposed runs, avoid unsupported terrace routing, and check that fittings, solvent cement, and supports suit the selected CPVC system.`,
+      buying: `For ${city.name} buyers, product comparison should focus on rated CPVC pipe, matching fittings, installer familiarity, and whether the site has coastal exposure or compact shafts.`,
+    };
+  }
+
+  if (text.includes("hill") || text.includes("cold") || text.includes("temperature variation") || text.includes("extreme temperature") || text.includes("elevation")) {
+    return {
+      type: "hill",
+      title: "Hill or temperature-variation lens",
+      application: `${city.name} needs CPVC decisions to account for compact routing, hotels or homes with hot-water demand, and site conditions that may be less forgiving than a standard plains-city apartment.`,
+      risk: `The practical risk is treating a hill or cold-weather project like a generic city page. Check exposed sections, support, heater connections, and whether the installer understands local routing constraints.`,
+      buying: `For ${city.name}, shortlist CPVC only after confirming the service temperature, pressure, pipe size, and joining conditions, especially where hot-water lines run through exposed or hard-to-access areas.`,
+    };
+  }
+
+  if (text.includes("hard-water") || text.includes("hard water")) {
+    return {
+      type: "hard-water",
+      title: "Hard-water and heat selection lens",
+      application: `${city.name} CPVC decisions often begin with hot-water lines, apartments, bungalows, and renovation jobs where water-condition discussions influence the shortlist.`,
+      risk: `Do not use hard-water context as a single yes-or-no answer. The field check is pipe rating, heater outlet detail, pressure, support spacing, and whether joints are made with compatible CPVC solvent cement.`,
+      buying: `For ${city.name}, compare CPVC products by standards, fittings, sizes, and installer discipline before using brand context as a final tie-breaker.`,
+    };
+  }
+
+  if (text.includes("high-rise") || text.includes("pressure-zone") || text.includes("apartments") || text.includes("apartment towers")) {
+    return {
+      type: "apartment",
+      title: "Apartment and pressure-zone lens",
+      application: `${city.name} commonly raises CPVC questions for branch lines, bathrooms, kitchens, shafts, risers, and renovation work inside multi-unit buildings.`,
+      risk: `The risk is undersizing branches or ignoring pressure zones. CPVC selection should be checked against fixture load, bends, supports, heater connections, and whether fittings stay compatible through the full run.`,
+      buying: `For ${city.name} apartment projects, the useful comparison is a complete pipe-and-fitting system, not only pipe price or a single brand name.`,
+    };
+  }
+
+  if (text.includes("industrial") || text.includes("commercial") || text.includes("office") || text.includes("institution")) {
+    return {
+      type: "commercial",
+      title: "High-use building lens",
+      application: `${city.name} CPVC pages should separate domestic potable-water plumbing from high-use commercial or institutional assumptions, because the service pattern changes the checks.`,
+      risk: `Do not stretch domestic CPVC guidance into every non-domestic application. Confirm pressure, temperature, usage cycles, pipe support, and whether the line is actually within the selected product's intended use.`,
+      buying: `For ${city.name}, procurement should compare system completeness, availability of matching fittings, documentation, and installer experience on similar building types.`,
+    };
+  }
+
+  if (text.includes("renovation") || text.includes("redevelopment") || text.includes("older") || text.includes("dense")) {
+    return {
+      type: "renovation",
+      title: "Renovation and transition lens",
+      application: `${city.name} often needs CPVC guidance for replacements, compact bathrooms, kitchen upgrades, and partial line changes rather than only new construction.`,
+      risk: `The field mistake is joining new CPVC thinking to old-site assumptions. Check transitions, threaded connections, access, alignment, cure time, and whether existing heaters or pumps create stress.`,
+      buying: `For ${city.name} renovations, choose pipe, fittings, and solvent cement as one system and ask the installer how they will handle transitions before buying material.`,
+    };
+  }
+
+  if (text.includes("hot climate") || text.includes("hot summers") || text.includes("hot inland")) {
+    return {
+      type: "hot-climate",
+      title: "Hot-climate domestic-water lens",
+      application: `${city.name} CPVC choices often come from bathrooms, kitchens, villas, plotted homes, and hot-water distribution where heat and long domestic runs make planning important.`,
+      risk: `Avoid assuming heat alone decides the material. Check operating temperature, pressure, support spacing, sunlight exposure, bend count, and compatibility of every fitting in the run.`,
+      buying: `For ${city.name}, the better buying question is whether the selected CPVC system can be installed cleanly for the exact layout, not whether the city simply appears on a product page.`,
+    };
+  }
+
+  return {
+    type: "residential",
+    title: "Residential project lens",
+    application: `${city.name} CPVC guidance is most useful for homes, apartments, bathrooms, kitchens, and renovation runs where the reader needs a practical shortlist before speaking with an installer.`,
+    risk: `The main risk is generic selection: choosing pipe by city name without checking size, pressure, temperature, fittings, support, and site access.`,
+    buying: `For ${city.name}, compare CPVC by complete-system suitability, documentation, installer capability, and whether the use case is hot water, cold water, or both.`,
   };
 }
 
@@ -427,9 +625,20 @@ function finalizePage(page: ProgrammaticPageDraft): ProgrammaticPage {
   };
 }
 
+function productGuidance(product: ProductSeed) {
+  return (
+    productGuidanceBySlug[product.slug] ?? {
+      decision: `Use this page to decide whether ${product.label} match the application rather than treating the product category as a universal answer.`,
+      checks: `Check how ${product.label} relate to pipe size, fittings, temperature, pressure, joining method, support spacing, and the actual building use case.`,
+      mistake: `The common mistake is selecting ${product.label} by name alone without confirming the system details that make the choice safe and useful.`,
+    }
+  );
+}
+
 export function getProductPages(): ProgrammaticPage[] {
-  return productSeeds.map((product) =>
-    finalizePage({
+  return productSeeds.map((product) => {
+    const guidance = productGuidance(product);
+    return finalizePage({
       type: "product",
       slug: product.slug,
       path: `/products/${product.slug}`,
@@ -445,16 +654,16 @@ export function getProductPages(): ProgrammaticPage[] {
       ],
       sections: [
         {
-          heading: `When ${product.label} make sense`,
-          body: `${product.label} should be evaluated as part of a complete CPVC plumbing system. The decision is strongest when the application, fixture load, hot-water exposure, and installation method are all known before purchase.`,
+          heading: `Decision role for ${product.label}`,
+          body: guidance.decision,
         },
         {
-          heading: "How to compare product options",
-          body: `Compare ${product.label} by standards context, pipe size, fitting availability, rated service conditions, and installer familiarity. A useful buying decision weighs the whole plumbing system instead of treating a product name as the full specification.`,
+          heading: "Checks before selection",
+          body: guidance.checks,
         },
         {
           heading: "Limits and mistakes to avoid",
-          body: "Do not choose CPVC only from a generic size or price label. Poor support spacing, rushed solvent-cement joints, wrong transitions, or using the material outside rated service conditions can create avoidable failures.",
+          body: guidance.mistake,
         },
         astralSection(),
       ],
@@ -480,20 +689,21 @@ export function getProductPages(): ProgrammaticPage[] {
         { label: "Products", href: "/products/cpvc-pipes" },
         { label: product.label, href: `/products/${product.slug}` },
       ],
-    }),
-  );
+    });
+  });
 }
 
 export function getStatePages(): ProgrammaticPage[] {
   return stateSeeds.map((state) => {
     const stateCities = citySeeds.filter((city) => city.state === state.name).slice(0, 8);
+    const stateProfile = statePlanningProfile(state, stateCities);
     return finalizePage({
       type: "state",
       slug: state.slug,
       path: `/state/${state.slug}`,
       title: `CPVC pipes in ${state.name}: city-wise plumbing guide`,
       description: `Plan CPVC plumbing decisions across ${state.name} with city links, hot-water context, and practical product-selection checks.`,
-      primaryQuery: `CPVC pipes in ${state.name}`,
+      primaryQuery: statePrimaryQuery(state),
       directAnswer: `CPVC pipes can fit many residential and light commercial plumbing projects in ${state.name}, especially where hot and cold water lines need corrosion-resistant product context. The right choice still depends on local building type, water conditions, and installation quality.`,
       updatedAt,
       facts: [
@@ -507,15 +717,23 @@ export function getStatePages(): ProgrammaticPage[] {
           body: `${state.name} includes ${state.context}. A useful CPVC page should not give one flat answer for every city; it should explain the building context and route readers into the most relevant city page.`,
         },
         {
-          heading: "Priority city coverage",
+          heading: stateProfile.planningLabel,
+          body: stateProfile.planningBody,
+        },
+        {
+          heading: `Priority city coverage in ${state.name}`,
           body:
             stateCities.length > 0
               ? `The strongest next step is usually a city page such as ${stateCities.map((city) => city.name).join(", ")}. Those pages carry more specific building and water-condition context than a state overview can responsibly provide.`
               : `This state overview should stay indexable only while it points readers toward stronger product and regional planning pages instead of pretending every project in ${state.name} is identical.`,
         },
         {
-          heading: "Limits before selecting a product",
-          body: "Do not treat a state page as a final product specification. Use it to shortlist the right CPVC questions, then check size, pressure, water-heater details, support spacing, fittings, and local installer capability.",
+          heading: stateProfile.riskLabel,
+          body: stateProfile.riskBody,
+        },
+        {
+          heading: `Limits before selecting CPVC in ${state.name}`,
+          body: `Do not treat a ${state.name} page as a final product specification. Use it to shortlist the right CPVC questions, then check size, pressure, water-heater details, support spacing, fittings, and local installer capability.`,
         },
         astralSection(),
       ],
@@ -531,7 +749,7 @@ export function getStatePages(): ProgrammaticPage[] {
       ],
       relatedLinks: [
         ...stateCities.map((city) => ({ label: `CPVC pipes in ${city.name}`, href: `/city/${city.slug}-cpvc-pipes` })),
-        ...productLinks().slice(0, 3),
+        ...productLinks().slice(0, 5),
       ],
       breadcrumbs: [
         { label: "Home", href: "/" },
@@ -547,42 +765,53 @@ export function getCityPages(): ProgrammaticPage[] {
     const state = stateSeeds.find((item) => item.name === city.state);
     const localities = localitySeeds.filter((locality) => locality.citySlug === city.slug);
     const profile = classifyContext(`${city.buildingContext} ${city.waterContext}`);
+    const cityProfile = cityPlanningProfile(city);
+    const displayName = cityPageName(city);
     return finalizePage({
       type: "city",
       slug: `${city.slug}-cpvc-pipes`,
       path: `/city/${city.slug}-cpvc-pipes`,
-      title: `CPVC pipes in ${city.name}: hot and cold water plumbing guide`,
-      description: `A practical CPVC guide for ${city.name}, covering hot-water suitability, apartment and home use cases, installation checks, and product context.`,
-      primaryQuery: `CPVC pipes in ${city.name}`,
-      directAnswer: `CPVC pipes can be a practical option in ${city.name} for domestic hot and cold water lines, especially in ${city.buildingContext}. The decision should still be checked against ${city.waterContext}, pipe sizing, support spacing, and correct joining.`,
+      title: `CPVC pipes in ${displayName}: hot and cold water plumbing guide`,
+      description: `A practical CPVC guide for ${displayName}, covering hot-water suitability, apartment and home use cases, installation checks, and product context.`,
+      primaryQuery: `CPVC pipes in ${displayName}`,
+      directAnswer: `CPVC pipes can be a practical option in ${displayName} for domestic hot and cold water lines, especially in ${city.buildingContext}. The decision should still be checked against ${city.waterContext}, pipe sizing, support spacing, and correct joining.`,
       updatedAt,
       facts: [
         { label: "City", value: city.name },
+        { label: "City type", value: cityProfile.type },
         { label: "Typical projects", value: city.buildingContext },
         { label: "Local check", value: city.waterContext },
       ],
       sections: [
         {
-          heading: `Where CPVC is commonly considered in ${city.name}`,
-          body: `In ${city.name}, CPVC is usually discussed for bathrooms, kitchens, utility lines, renovation runs, and domestic hot-water distribution. It is most useful when the project team wants a corrosion-resistant plumbing material and the installer can follow correct CPVC joining practice.`,
+          heading: `Where CPVC is commonly considered in ${displayName}`,
+          body: cityProfile.application,
+        },
+        {
+          heading: cityProfile.title,
+          body: cityProfile.risk,
         },
         {
           heading: profile.label,
-          body: `${profile.note} For ${city.name}, this matters because the local context includes ${city.waterContext} and ${city.buildingContext}.`,
+          body: `${profile.note} For ${displayName}, this matters because the local context includes ${city.waterContext} and ${city.buildingContext}.`,
         },
         {
-          heading: "Limits and site checks",
-          body: `Do not select CPVC in ${city.name} from the city name alone. Check heater connections, pressure, pipe size, support spacing, sunlight exposure, and whether fittings and solvent cement are compatible with the selected pipe system.`,
+          heading: `Buying and installer checks in ${displayName}`,
+          body: cityProfile.buying,
+        },
+        {
+          heading: `Limits and site checks for ${displayName}`,
+          body: `Do not select CPVC in ${displayName} from the city name alone. Check heater connections, pressure, pipe size, support spacing, sunlight exposure, and whether fittings and solvent cement are compatible with the selected pipe system.`,
         },
         astralSection(),
       ],
       faqs: [
         {
-          question: `Is CPVC suitable for apartments in ${city.name}?`,
+          question: `Is CPVC suitable for apartments in ${displayName}?`,
           answer: `It can be suitable when the pipe and fittings are rated for the intended hot and cold water service and the installation handles pressure, support, and joint quality correctly.`,
         },
         {
-          question: `What should buyers in ${city.name} check before choosing CPVC?`,
+          question: `What should buyers in ${displayName} check before choosing CPVC?`,
           answer: `They should check pipe size, water temperature, pressure, support spacing, fitting compatibility, installer experience, and whether the selected product is suitable for the project type.`,
         },
       ],
@@ -597,7 +826,7 @@ export function getCityPages(): ProgrammaticPage[] {
       breadcrumbs: [
         { label: "Home", href: "/" },
         ...(state ? [{ label: state.name, href: `/state/${state.slug}` }] : []),
-        { label: city.name, href: `/city/${city.slug}-cpvc-pipes` },
+        { label: displayName, href: `/city/${city.slug}-cpvc-pipes` },
       ],
     });
   });
@@ -608,7 +837,7 @@ export function getLocalityPages(): ProgrammaticPage[] {
     const city = citySeeds.find((item) => item.slug === locality.citySlug);
     const state = stateSeeds.find((item) => item.name === locality.state);
     const profile = classifyContext(`${locality.context} ${city?.waterContext ?? ""}`);
-    return finalizePage({
+    const page = finalizePage({
       type: "locality",
       slug: `${locality.slug}-cpvc-pipes`,
       path: `/location/${locality.citySlug}/${locality.slug}-cpvc-pipes`,
@@ -659,6 +888,16 @@ export function getLocalityPages(): ProgrammaticPage[] {
         { label: locality.name, href: `/location/${locality.citySlug}/${locality.slug}-cpvc-pipes` },
       ],
     });
+
+    return {
+      ...page,
+      indexable: false,
+      qualityState: "publishable",
+      auditNotes: [
+        "Locality pages are held noindex during Phase 1 remediation until manual review confirms unique local value.",
+        ...page.auditNotes,
+      ],
+    };
   });
 }
 

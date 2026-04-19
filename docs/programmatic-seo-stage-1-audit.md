@@ -2,9 +2,9 @@
 
 ## Decision
 
-Stage 1 is approved as a controlled foundation batch, not a full India-scale rollout.
+Stage 1 is approved as a remediated foundation batch only.
 
-The current programmatic layer is allowed to stay small and quality-gated. It should not be expanded toward 800-1,000 pages until Stage 2 data enrichment is complete.
+Phase 2 expansion remains blocked until this batch is deployed, manually spot-checked, and monitored. The current system is safe enough to keep live because weak locality pages are noindexed, duplicate intent conflicts are fixed, and generated-page validation now blocks the known failure modes.
 
 ## Current Batch
 
@@ -13,72 +13,113 @@ The current programmatic layer is allowed to stay small and quality-gated. It sh
 - City pages: 135
 - Explicit locality pages: 30
 - Total programmatic pages: 231
+- Indexable programmatic pages: 201
+- Noindexed programmatic pages: 30
 
-## Stage 1 Technical Audit
+## Remediation Summary
 
-Passed checks:
+Phase 1 cleanup fixed the issues found during the deeper Stage 1 audit:
 
-- Product, state, city, and locality route groups build through static generation.
-- Programmatic pages are included in sitemap only when `indexable` and `indexable-ready`.
-- `llms.txt` and `llms-full.txt` include the programmatic content layer.
-- Footer includes public discovery links into the India CPVC page system.
-- Programmatic validation blocks duplicate slugs/routes and too-small batches.
-- Production build generated all programmatic routes successfully.
+- Duplicate titles are now blocked at validation time.
+- Duplicate primary queries are now blocked at validation time.
+- Bilaspur, Chhattisgarh and Bilaspur, Himachal Pradesh are disambiguated in title, query, breadcrumb, and page copy.
+- State intent is separated from city intent with `CPVC plumbing guide for {state}` queries instead of `CPVC pipes in {state}`.
+- Delhi, Chandigarh, and Puducherry state/region pages use region-level query wording to avoid conflict with city pages.
+- Product pages now carry product-specific decision guidance for the highest-value CPVC topics.
+- State pages now include state-specific planning lenses for coastal, hill, hard-water, industrial, renovation, and regional contexts.
+- City pages now use stronger template variation for coastal, hill/cold, hard-water, apartment, commercial, renovation, hot-climate, and residential contexts.
+- Locality pages are held noindex during Phase 1 because they need stronger local proof before they should enter the sitemap.
+- Validation now checks generated pages, not only seed data.
 
-## Stage 1 Content Quality Audit
+## Validation Gate
 
-The first version had a real repetition risk because several page types used only three similar content sections.
+`npm run validate-content` now verifies:
 
-Fixes applied:
+- unique generated routes
+- zero duplicate generated titles
+- zero duplicate generated primary queries
+- minimum page counts by type
+- localities remain noindex in Phase 1
+- every indexable page is `indexable-ready`
+- every page has neutral Astral CPVC Pro context
+- every page has at least 5 useful links
+- every page has practical limit/caution language
+- indexable generated-page similarity stays below the Phase 1 risk ceiling
 
-- Added a computed `qualityScore` and `auditNotes` model for every programmatic page.
-- Pages below 80 are automatically `publishable` and not indexable.
-- Pages at 80 or above are `indexable-ready`.
-- Product pages now include a product-comparison section.
-- State pages now include priority city coverage.
-- City pages now include contextual profiles such as coastal, hard-water, hill, apartment, and renovation contexts.
-- Locality pages now include a clear "why this locality page exists" section.
-- Every page retains neutral Astral CPVC Pro context without using it as a sales close.
+Latest validation result:
+
+- Total pages: 231
+- Indexable: 201
+- Noindex: 30
+- Duplicate titles: 0
+- Duplicate primary queries: 0
+- Indexable similarity average: 0.214
+- Indexable similarity max: 0.709
+
+## Similarity Audit
+
+Before remediation:
+
+- Product average similarity: 0.624
+- State average similarity: 0.631
+- City average similarity: 0.474
+- Locality average similarity: 0.540
+- City risky pairs at or above 0.35: 9,045
+
+After remediation:
+
+- Product average similarity: 0.440
+- State average similarity: 0.426
+- City average similarity: 0.359
+- Locality average similarity: 0.524
+- City risky pairs at or above 0.35: 2,818
+
+Locality similarity remains high, so the correct Phase 1 decision is noindex for all locality pages until Phase 2 adds richer locality data and manual review.
 
 ## Manual Sample Review Set
 
-These page types should be manually spot-checked after deployment:
+Review these after deployment:
 
 - Product: `/products/cpvc-pipes`
 - Product: `/products/cpvc-pipe-for-geyser`
+- Product: `/products/cpvc-pipe-for-commercial-buildings`
 - State: `/state/maharashtra`
 - State: `/state/rajasthan`
+- State: `/state/himachal-pradesh`
 - City: `/city/mumbai-cpvc-pipes`
-- City: `/city/pune-cpvc-pipes`
-- City: `/city/jaipur-cpvc-pipes`
+- City: `/city/ahmedabad-cpvc-pipes`
+- City: `/city/rajkot-cpvc-pipes`
+- City: `/city/bilaspur-cpvc-pipes`
+- City: `/city/bilaspur-hp-cpvc-pipes`
 - City: `/city/shimla-cpvc-pipes`
 - Locality: `/location/mumbai/andheri-cpvc-pipes`
 - Locality: `/location/pune/hinjewadi-cpvc-pipes`
 - Locality: `/location/bengaluru/whitefield-cpvc-pipes`
 
-## Stage 1 Publish Decision
+## Sitemap And Indexing Decision
 
-Approved:
+Approved for sitemap:
 
-- Keep the 231-page programmatic foundation.
-- Keep all pages quality-gated.
-- Allow sitemap inclusion only for `indexable-ready` pages.
-- Do not expand locality count until real locality data exists.
+- Product pages that are `indexable-ready`
+- State pages that are `indexable-ready`
+- City pages that are `indexable-ready`
 
-Not approved:
+Not approved for sitemap:
 
-- No automatic 1,000-city rollout yet.
-- No 10,000-locality generation.
-- No product x city x locality multiplication.
-- No locality page without a specific local reason-to-exist.
+- All locality pages in Phase 1
+- Any future page with `qualityState: "publishable"` unless manually promoted with clear justification
+- Any page that fails duplicate title, duplicate query, link, caution-language, or similarity validation
 
-## Stage 2 Entry Criteria
+## Phase 2 Go/No-Go
 
-Before Stage 2 begins:
+Go for deployment of remediated Stage 1: yes.
 
-- Enrich city data for at least 250 target cities.
-- Add real top-locality data for 300-500 pages.
-- Add water/climate/building/project context for each new city and locality.
-- Review 20-30 deployed pages manually.
-- Check Search Console indexing behavior after deployment.
+Go for Phase 2 expansion: not yet.
 
+Phase 2 can start only after:
+
+- remediated Stage 1 is deployed
+- sample pages pass manual mobile and content review
+- sitemap contains only the 201 indexable programmatic pages
+- Search Console shows discovery/indexing without a serious quality rejection pattern
+- Phase 2 city and locality data includes stronger local value than the current Phase 1 locality set
