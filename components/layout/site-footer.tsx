@@ -4,7 +4,7 @@ import { astralCpvcReference, navItems } from "@/lib/site-config";
 export function SiteFooter() {
   return (
     <footer className="border-t border-[color:var(--border)] bg-[color:var(--card)]">
-      <div className="mx-auto grid max-w-7xl gap-8 px-6 py-12 md:grid-cols-[1.1fr_1fr_1fr] md:px-10">
+      <div className="mx-auto grid max-w-7xl gap-8 px-6 py-12 md:grid-cols-[1.1fr_1fr_1fr_1fr] md:px-10">
         <div>
           <p className="font-[family-name:var(--font-serif)] text-2xl">CPVC Guide</p>
           <p className="mt-3 max-w-xl text-sm leading-7 text-[color:var(--muted)]">
@@ -38,6 +38,15 @@ export function SiteFooter() {
           <div className="mt-4 grid gap-3 text-sm">
             <Link href="/about">About</Link>
             <Link href="/editorial-policy">Editorial policy</Link>
+          </div>
+        </div>
+        <div>
+          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[color:var(--muted)]">India CPVC</p>
+          <div className="mt-4 grid gap-3 text-sm">
+            <Link href="/products/cpvc-pipes">CPVC pipes</Link>
+            <Link href="/state/maharashtra">Maharashtra</Link>
+            <Link href="/city/pune-cpvc-pipes">Pune</Link>
+            <Link href="/city/bengaluru-cpvc-pipes">Bengaluru</Link>
           </div>
         </div>
       </div>
