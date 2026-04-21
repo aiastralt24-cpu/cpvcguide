@@ -56,6 +56,37 @@ export default function HomePage() {
 
       <FeaturedGuides items={featured} />
 
+      <section className="mt-16 rounded-[2rem] border border-[color:var(--border)] bg-[color:var(--card)] p-8 shadow-[var(--shadow)] md:p-10">
+        <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[color:var(--accent)]">India CPVC coverage</p>
+        <div className="mt-4 grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-end">
+          <div>
+            <h2 className="font-[family-name:var(--font-serif)] text-3xl leading-tight md:text-5xl">
+              Browse the indexable CPVC product, state, and city guides.
+            </h2>
+            <p className="mt-4 text-base leading-8 text-[color:var(--muted)]">
+              The India CPVC index gives search crawlers and readers a clean path into the pages currently approved for
+              indexing, while weaker locality and expansion pages stay out until they pass review.
+            </p>
+          </div>
+          <div className="grid gap-3 sm:grid-cols-2">
+            {[
+              { label: "India CPVC index", href: "/india-cpvc-pipes" },
+              { label: "CPVC pipes", href: "/products/cpvc-pipes" },
+              { label: "Maharashtra CPVC guide", href: "/state/maharashtra" },
+              { label: "Pune CPVC guide", href: "/city/pune-cpvc-pipes" },
+            ].map((item) => (
+              <a
+                key={item.href}
+                href={item.href}
+                className="rounded-2xl border border-[color:var(--border)] bg-white/55 p-5 text-sm font-semibold transition hover:border-[color:var(--accent)]"
+              >
+                {item.label}
+              </a>
+            ))}
+          </div>
+        </div>
+      </section>
+
       <section className="mt-16">
         <SectionHeading
           eyebrow="Trusted by readers"

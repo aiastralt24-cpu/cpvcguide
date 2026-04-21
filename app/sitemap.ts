@@ -4,7 +4,7 @@ import { buildAbsoluteUrl } from "@/lib/metadata";
 import { getAllProgrammaticPages } from "@/lib/programmatic-seo";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const staticRoutes = ["", "/about", "/editorial-policy"];
+  const staticRoutes = ["", "/about", "/editorial-policy", "/india-cpvc-pipes"];
   const contentItems = getAllContentItems();
   const categoryRoutes = getCategoryArchive().map((category) => {
     const categoryItems = contentItems.filter((item) => item.category === category.slug && item.publication.published);
@@ -30,7 +30,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   const staticEntries = staticRoutes.map((route) => ({
     route,
-    lastModified: new Date("2026-04-01"),
+    lastModified: route === "/india-cpvc-pipes" ? new Date("2026-04-21") : new Date("2026-04-01"),
   }));
 
   return [...staticEntries, ...categoryRoutes, ...contentRoutes, ...programmaticRoutes].map((entry) => ({

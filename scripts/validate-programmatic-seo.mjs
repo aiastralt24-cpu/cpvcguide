@@ -174,6 +174,11 @@ if (weakLocalities.length > 0) {
   fail(`Locality pages must stay noindex in Phase 1 remediation: ${weakLocalities.map((page) => page.path).join(", ")}`);
 }
 
+const prematurePhaseTwoPages = pages.filter((page) => page.rolloutPhase === 2 && page.indexable);
+if (prematurePhaseTwoPages.length > 0) {
+  fail(`Phase 2 pages must stay noindex until promotion: ${prematurePhaseTwoPages.map((page) => page.path).join(", ")}`);
+}
+
 const indexableButNotReady = pages.filter((page) => page.indexable && page.qualityState !== "indexable-ready");
 if (indexableButNotReady.length > 0) {
   fail(`Indexable pages must be indexable-ready: ${indexableButNotReady.map((page) => page.path).join(", ")}`);
@@ -220,6 +225,8 @@ const counts = {
   states: pagesByType.state?.length ?? 0,
   cities: pagesByType.city?.length ?? 0,
   localities: pagesByType.locality?.length ?? 0,
+  phaseTwoPages: pages.filter((page) => page.rolloutPhase === 2).length,
+  phaseTwoIndexable: pages.filter((page) => page.rolloutPhase === 2 && page.indexable).length,
 };
 
 console.log("Programmatic SEO validation passed.");

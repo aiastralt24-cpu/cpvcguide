@@ -43,6 +43,7 @@ export function SiteFooter() {
         <div>
           <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[color:var(--muted)]">India CPVC</p>
           <div className="mt-4 grid gap-3 text-sm">
+            <Link href="/india-cpvc-pipes">India CPVC index</Link>
             <Link href="/products/cpvc-pipes">CPVC pipes</Link>
             <Link href="/state/maharashtra">Maharashtra</Link>
             <Link href="/city/pune-cpvc-pipes">Pune</Link>

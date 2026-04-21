@@ -30,6 +30,7 @@ export type ProgrammaticPage = {
   faqs: ProgrammaticFaq[];
   relatedLinks: ProgrammaticLink[];
   breadcrumbs: ProgrammaticLink[];
+  rolloutPhase?: 1 | 2;
 };
 
 type ProgrammaticPageDraft = Omit<ProgrammaticPage, "indexable" | "qualityState" | "qualityScore" | "auditNotes">;
@@ -54,6 +55,7 @@ type CitySeed = {
   state: string;
   buildingContext: string;
   waterContext: string;
+  rolloutPhase?: 1 | 2;
 };
 
 type LocalitySeed = {
@@ -311,11 +313,138 @@ gangtok|Gangtok|Sikkim|hill homes, hotels, and compact plumbing systems|cold-wea
 panaji|Panaji|Goa|coastal homes, apartments, and hospitality plumbing|humidity and corrosion discussions
 puducherry|Puducherry|Puducherry|coastal homes, apartments, and compact urban projects|humidity and hot climate
 port-blair|Port Blair|Andaman and Nicobar Islands|island homes, institutions, and hospitality sites|coastal humidity and procurement constraints
-leh|Leh|Ladakh|cold-climate homes, hotels, and specialized site work|extreme temperature context requiring project-specific review`;
+leh|Leh|Ladakh|cold-climate homes, hotels, and specialized site work|extreme temperature context requiring project-specific review
+tirupati|Tirupati|Andhra Pradesh|pilgrim hotels, apartments, and independent homes|hot climate and high-use domestic plumbing|phase2
+anantapur|Anantapur|Andhra Pradesh|independent homes, apartments, and commercial interiors|hot dry climate and long domestic runs|phase2
+eluru|Eluru|Andhra Pradesh|homes, apartments, and renovation-led plumbing|humid inland conditions and residential growth|phase2
+ongole|Ongole|Andhra Pradesh|independent homes, apartments, and commercial buildings|hot climate and domestic water-line upgrades|phase2
+kakinada|Kakinada|Andhra Pradesh|coastal homes, apartments, and commercial sites|coastal humidity and exposed-run planning|phase2
+machilipatnam|Machilipatnam|Andhra Pradesh|coastal homes, institutions, and hospitality plumbing|humidity and corrosion discussions|phase2
+tenali|Tenali|Andhra Pradesh|homes, apartments, and compact commercial buildings|hot and humid residential plumbing context|phase2
+chittoor|Chittoor|Andhra Pradesh|homes, small apartments, and renovation work|hot climate and mixed water-pressure conditions|phase2
+vizianagaram|Vizianagaram|Andhra Pradesh|homes, apartments, and institutional buildings|humid climate and residential expansion|phase2
+srikakulam|Srikakulam|Andhra Pradesh|coastal homes, apartments, and small commercial sites|humidity and domestic water-line upgrades|phase2
+arrah|Arrah|Bihar|dense homes, apartments, and renovation-led upgrades|older-building plumbing and mixed pressure conditions|phase2
+darbhanga|Darbhanga|Bihar|homes, apartments, and institutional projects|humid climate and renovation demand|phase2
+purnia|Purnia|Bihar|homes, apartments, and commercial interiors|humid conditions and residential upgrades|phase2
+katihar|Katihar|Bihar|dense homes, trade buildings, and renovation work|humid climate and compact plumbing runs|phase2
+bihar-sharif|Bihar Sharif|Bihar|homes, apartments, and older-building upgrades|hot climate and renovation-led water-line work|phase2
+begusarai|Begusarai|Bihar|industrial-town housing, homes, and apartments|high-use plumbing and renovation context|phase2
+hajipur|Hajipur|Bihar|homes, apartments, and commercial upgrades|humid conditions and dense residential plumbing|phase2
+siwan|Siwan|Bihar|homes, apartments, and renovation projects|residential water-line upgrades and mixed site conditions|phase2
+ambikapur|Ambikapur|Chhattisgarh|homes, apartments, and institutional buildings|inland climate and residential expansion|phase2
+jagdalpur|Jagdalpur|Chhattisgarh|homes, hotels, and compact commercial projects|humid conditions and local procurement planning|phase2
+raigarh|Raigarh|Chhattisgarh|industrial-town housing, apartments, and commercial buildings|high-use plumbing and hot-weather context|phase2
+rajnandgaon|Rajnandgaon|Chhattisgarh|homes, apartments, and renovation sites|inland climate and residential water-line growth|phase2
+vasco-da-gama|Vasco da Gama|Goa|coastal apartments, homes, and hospitality plumbing|coastal humidity and exposed-run planning|phase2
+margao|Margao|Goa|coastal homes, apartments, and commercial interiors|humidity and renovation-friendly plumbing context|phase2
+gandhinagar|Gandhinagar|Gujarat|planned housing, apartments, and institutional buildings|hot climate and hard-water conversations|phase2
+anand|Anand|Gujarat|homes, apartments, and commercial interiors|hot climate and domestic water-line upgrades|phase2
+nadiad|Nadiad|Gujarat|homes, apartments, and renovation work|hot climate and hard-water planning|phase2
+morbi|Morbi|Gujarat|industrial housing, apartments, and commercial buildings|high-use plumbing and hard-water discussions|phase2
+bharuch|Bharuch|Gujarat|industrial-town housing, apartments, and institutions|hot climate and high-use water systems|phase2
+valsad|Valsad|Gujarat|coastal homes, apartments, and commercial sites|humidity and hard-water discussions|phase2
+navsari|Navsari|Gujarat|homes, apartments, and coastal-linked renovations|humid conditions and domestic plumbing upgrades|phase2
+mehsana|Mehsana|Gujarat|homes, apartments, and commercial interiors|hot climate and hard-water context|phase2
+porbandar|Porbandar|Gujarat|coastal homes, hotels, and apartments|coastal humidity and exposed-run checks|phase2
+junagadh|Junagadh|Gujarat|homes, apartments, and hospitality buildings|hot climate and renovation demand|phase2
+hisar|Hisar|Haryana|homes, apartments, and commercial buildings|hot climate and hard-water conversations|phase2
+karnal|Karnal|Haryana|independent homes, apartments, and institutions|domestic hot-water demand and renovation context|phase2
+panipat|Panipat|Haryana|industrial-town housing, homes, and apartments|high-use plumbing and hard-water discussions|phase2
+sonipat|Sonipat|Haryana|NCR-linked apartments, builder floors, and plotted housing|hard-water context and pressure-zone planning|phase2
+yamunanagar|Yamunanagar|Haryana|industrial housing, homes, and commercial interiors|domestic water-line upgrades and renovation demand|phase2
+panchkula|Panchkula|Haryana|planned sectors, apartments, and premium homes|organized residential plumbing and hot-water demand|phase2
+ambala|Ambala|Haryana|homes, institutions, and commercial buildings|mixed climate and renovation-led plumbing|phase2
+mandi|Mandi|Himachal Pradesh|hill homes, hotels, and compact commercial buildings|temperature variation and support planning|phase2
+solan|Solan|Himachal Pradesh|hill homes, apartments, and hospitality sites|temperature variation and exposed-run checks|phase2
+dharamshala|Dharamshala|Himachal Pradesh|hill homes, hotels, and institutional plumbing|cold-weather planning and compact routing|phase2
+hazaribagh|Hazaribagh|Jharkhand|homes, apartments, and institutional buildings|plateau climate and renovation demand|phase2
+deoghar|Deoghar|Jharkhand|pilgrim hotels, homes, and apartments|high-use plumbing and hot-water demand|phase2
+giridih|Giridih|Jharkhand|homes, apartments, and mining-town housing|renovation-led water-line upgrades|phase2
+tumakuru|Tumakuru|Karnataka|homes, apartments, and industrial-linked housing|moderate climate and residential expansion|phase2
+shivamogga|Shivamogga|Karnataka|homes, apartments, and institutional projects|humid inland conditions and renovation demand|phase2
+hassan|Hassan|Karnataka|homes, apartments, and hospitality buildings|moderate climate and domestic hot-water planning|phase2
+mandya|Mandya|Karnataka|homes, apartments, and commercial interiors|hot climate and residential water-line upgrades|phase2
+udupi|Udupi|Karnataka|coastal homes, apartments, and hospitality plumbing|humidity and exposed-run planning|phase2
+chikmagalur|Chikmagalur|Karnataka|hill homes, hotels, and compact water systems|temperature variation and routing constraints|phase2
+bidar|Bidar|Karnataka|homes, apartments, and institutional buildings|hot climate and domestic plumbing growth|phase2
+raichur|Raichur|Karnataka|homes, apartments, and commercial upgrades|hot dry climate and long domestic runs|phase2
+thrissur|Thrissur|Kerala|independent homes, apartments, and commercial buildings|humid climate and renovation-friendly plumbing|phase2
+thiruvananthapuram|Thiruvananthapuram|Kerala|coastal homes, apartments, and institutions|humidity and hot-water plumbing demand|phase2
+kannur|Kannur|Kerala|coastal homes, apartments, and renovation projects|humidity and exposed-run planning|phase2
+alappuzha|Alappuzha|Kerala|coastal homes, hospitality buildings, and renovations|high humidity and corrosion discussions|phase2
+palakkad|Palakkad|Kerala|homes, apartments, and commercial interiors|hot inland climate and residential upgrades|phase2
+kottayam|Kottayam|Kerala|independent homes, apartments, and institutions|humid climate and renovation-led plumbing|phase2
+malappuram|Malappuram|Kerala|homes, apartments, and compact commercial buildings|humid conditions and residential water demand|phase2
+satna|Satna|Madhya Pradesh|homes, apartments, and institutional buildings|hot climate and residential expansion|phase2
+rewa|Rewa|Madhya Pradesh|homes, apartments, and renovation projects|inland climate and mixed pressure conditions|phase2
+sagar|Sagar|Madhya Pradesh|homes, apartments, and institutional plumbing|hot summers and renovation-led upgrades|phase2
+ratlam|Ratlam|Madhya Pradesh|homes, apartments, and commercial interiors|hot climate and domestic water-line planning|phase2
+dewas|Dewas|Madhya Pradesh|industrial-town housing, apartments, and homes|high-use plumbing and inland climate|phase2
+chhindwara|Chhindwara|Madhya Pradesh|homes, apartments, and institutional buildings|temperature variation and renovation demand|phase2
+morena|Morena|Madhya Pradesh|homes, apartments, and older-building upgrades|hot climate and mixed water-pressure needs|phase2
+khargone|Khargone|Madhya Pradesh|homes, apartments, and commercial interiors|hot climate and domestic water-line upgrades|phase2
+panvel|Panvel|Maharashtra|high-rise apartments, redevelopment corridors, and new housing|coastal humidity and pressure-zone planning|phase2
+vasai-virar|Vasai Virar|Maharashtra|suburban apartments, independent homes, and redevelopment|coastal humidity and long domestic runs|phase2
+mira-bhayandar|Mira Bhayandar|Maharashtra|dense apartments, redevelopment, and compact renovations|coastal humidity and high-use plumbing|phase2
+chandrapur|Chandrapur|Maharashtra|industrial housing, homes, and apartments|hot climate and high-use water systems|phase2
+parbhani|Parbhani|Maharashtra|homes, apartments, and commercial buildings|hot climate and renovation demand|phase2
+beed|Beed|Maharashtra|homes, apartments, and institutional projects|hot climate and domestic water planning|phase2
+osmanabad|Osmanabad|Maharashtra|homes, apartments, and renovation-led plumbing|hot dry climate and long domestic runs|phase2
+satara|Satara|Maharashtra|homes, apartments, and hospitality buildings|moderate climate and renovation demand|phase2
+ratnagiri|Ratnagiri|Maharashtra|coastal homes, hospitality sites, and apartments|coastal humidity and exposed-run planning|phase2
+berhampur|Berhampur|Odisha|coastal homes, apartments, and commercial buildings|humidity and residential growth|phase2
+sambalpur|Sambalpur|Odisha|homes, apartments, and institutional projects|hot climate and mixed water-pressure conditions|phase2
+balasore|Balasore|Odisha|coastal homes, apartments, and commercial sites|humidity and exposed-run planning|phase2
+puri|Puri|Odisha|coastal hotels, homes, and apartment projects|coastal humidity and hospitality plumbing demand|phase2
+angul|Angul|Odisha|industrial-town housing, apartments, and institutions|high-use plumbing and hot-weather context|phase2
+bathinda|Bathinda|Punjab|independent homes, apartments, and commercial buildings|domestic hot-water demand and renovation context|phase2
+mohali|Mohali|Punjab|planned sectors, apartments, and premium housing|organized residential plumbing and pressure-zone checks|phase2
+pathankot|Pathankot|Punjab|homes, hotels, and mixed climate projects|temperature variation and hot-water demand|phase2
+hoshiarpur|Hoshiarpur|Punjab|independent homes, apartments, and renovation work|domestic hot-water demand and residential upgrades|phase2
+moga|Moga|Punjab|homes, apartments, and commercial interiors|renovation-led plumbing and domestic hot-water use|phase2
+alwar|Alwar|Rajasthan|industrial-town housing, apartments, and independent homes|hot climate and hard-water context|phase2
+bharatpur|Bharatpur|Rajasthan|homes, hotels, and apartment growth|hot climate and renovation demand|phase2
+sikar|Sikar|Rajasthan|homes, hostels, and apartments|hot climate and hard-water planning|phase2
+bhilwara|Bhilwara|Rajasthan|industrial housing, homes, and commercial interiors|hot climate and high-use plumbing|phase2
+pali|Pali|Rajasthan|industrial-town housing, homes, and apartments|hot climate and hard-water discussions|phase2
+sri-ganganagar|Sri Ganganagar|Rajasthan|independent homes, apartments, and commercial buildings|hot climate and domestic water-line planning|phase2
+churu|Churu|Rajasthan|hot-climate homes, hotels, and independent housing|high-temperature context and hard-water planning|phase2
+barmer|Barmer|Rajasthan|hot-climate homes, commercial buildings, and institutions|high-temperature context and long domestic runs|phase2
+vellore|Vellore|Tamil Nadu|homes, apartments, hospitals, and institutions|hot climate and high-use plumbing|phase2
+thoothukudi|Thoothukudi|Tamil Nadu|coastal homes, apartments, and industrial-linked housing|coastal humidity and exposed-run planning|phase2
+thanjavur|Thanjavur|Tamil Nadu|homes, hotels, and apartment growth|hot climate and renovation-led plumbing|phase2
+dindigul|Dindigul|Tamil Nadu|homes, apartments, and commercial interiors|hot climate and domestic water-line upgrades|phase2
+cuddalore|Cuddalore|Tamil Nadu|coastal homes, apartments, and commercial buildings|humidity and corrosion discussions|phase2
+kanchipuram|Kanchipuram|Tamil Nadu|homes, apartments, and institutional buildings|hot climate and residential expansion|phase2
+hosur|Hosur|Tamil Nadu|industrial-town apartments, villas, and worker housing|high-use plumbing and mixed residential demand|phase2
+nagercoil|Nagercoil|Tamil Nadu|coastal homes, apartments, and hospitality sites|humidity and hot-water plumbing demand|phase2
+karimnagar|Karimnagar|Telangana|homes, apartments, and commercial buildings|hot climate and growing residential demand|phase2
+nizamabad|Nizamabad|Telangana|homes, apartments, and renovation projects|hot climate and domestic water-line upgrades|phase2
+khammam|Khammam|Telangana|homes, apartments, and commercial interiors|hot climate and mixed pressure conditions|phase2
+mahbubnagar|Mahbubnagar|Telangana|homes, apartments, and institutional projects|hot dry climate and residential expansion|phase2
+adilabad|Adilabad|Telangana|homes, apartments, and compact commercial buildings|hot climate and renovation-led plumbing|phase2
+siddipet|Siddipet|Telangana|planned housing, homes, and apartments|hot climate and domestic water demand|phase2
+ayodhya|Ayodhya|Uttar Pradesh|homes, hotels, and hospitality projects|high-use plumbing and renovation demand|phase2
+moradabad|Moradabad|Uttar Pradesh|dense homes, apartments, and industrial-linked buildings|renovation-led plumbing and high-use water lines|phase2
+rampur|Rampur|Uttar Pradesh|homes, apartments, and older-building upgrades|dense residential plumbing and renovation context|phase2
+raebareli|Raebareli|Uttar Pradesh|homes, apartments, and institutional buildings|residential expansion and mixed pressure conditions|phase2
+sitapur|Sitapur|Uttar Pradesh|homes, apartments, and commercial interiors|dense residential water-line demand|phase2
+bahraich|Bahraich|Uttar Pradesh|homes, apartments, and institutional projects|humid conditions and domestic plumbing upgrades|phase2
+hapur|Hapur|Uttar Pradesh|NCR-linked homes, apartments, and commercial buildings|hard-water context and renovation demand|phase2
+etawah|Etawah|Uttar Pradesh|homes, apartments, and older-building upgrades|hot climate and mixed water-pressure needs|phase2
+haridwar|Haridwar|Uttarakhand|hotels, homes, and institutional plumbing|seasonal high-use plumbing and temperature variation|phase2
+haldwani|Haldwani|Uttarakhand|homes, apartments, and hill-plains housing|temperature variation and residential expansion|phase2
+roorkee|Roorkee|Uttarakhand|homes, institutions, and apartments|mixed climate and domestic hot-water demand|phase2
+rudrapur|Rudrapur|Uttarakhand|industrial-town housing, apartments, and institutions|high-use plumbing and mixed site conditions|phase2
+howrah|Howrah|West Bengal|dense apartments, older homes, and commercial upgrades|humid urban conditions and renovation-led plumbing|phase2
+bardhaman|Bardhaman|West Bengal|homes, apartments, and institutional buildings|humid climate and residential expansion|phase2
+malda|Malda|West Bengal|dense homes, apartments, and commercial interiors|humid conditions and renovation demand|phase2
+krishnanagar|Krishnanagar|West Bengal|homes, apartments, and older-building upgrades|humid climate and compact plumbing runs|phase2`;
 
 export const citySeeds: CitySeed[] = citySource.split("\n").map((line) => {
-  const [slug, name, state, buildingContext, waterContext] = line.split("|");
-  return { slug, name, state, buildingContext, waterContext };
+  const [slug, name, state, buildingContext, waterContext, phase] = line.split("|");
+  return { slug, name, state, buildingContext, waterContext, rolloutPhase: phase === "phase2" ? 2 : 1 };
 });
 
 export const localitySeeds: LocalitySeed[] = [
@@ -767,10 +896,11 @@ export function getCityPages(): ProgrammaticPage[] {
     const profile = classifyContext(`${city.buildingContext} ${city.waterContext}`);
     const cityProfile = cityPlanningProfile(city);
     const displayName = cityPageName(city);
-    return finalizePage({
+    const page = finalizePage({
       type: "city",
       slug: `${city.slug}-cpvc-pipes`,
       path: `/city/${city.slug}-cpvc-pipes`,
+      rolloutPhase: city.rolloutPhase,
       title: `CPVC pipes in ${displayName}: hot and cold water plumbing guide`,
       description: `A practical CPVC guide for ${displayName}, covering hot-water suitability, apartment and home use cases, installation checks, and product context.`,
       primaryQuery: `CPVC pipes in ${displayName}`,
@@ -829,6 +959,20 @@ export function getCityPages(): ProgrammaticPage[] {
         { label: displayName, href: `/city/${city.slug}-cpvc-pipes` },
       ],
     });
+
+    if (city.rolloutPhase === 2) {
+      return {
+        ...page,
+        indexable: false,
+        qualityState: "publishable",
+        auditNotes: [
+          "Phase 2 city page is generated for controlled review and held noindex until Search Console accepts the Phase 1 foundation.",
+          ...page.auditNotes,
+        ],
+      };
+    }
+
+    return page;
   });
 }
 
